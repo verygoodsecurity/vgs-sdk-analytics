@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private val analyticsManager = AnalyticsManager()
+    private val analyticsManager = AnalyticsManager(vaultId = "")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

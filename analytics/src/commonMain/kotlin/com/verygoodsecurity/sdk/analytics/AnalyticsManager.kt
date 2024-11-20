@@ -7,14 +7,20 @@ import com.verygoodsecurity.sdk.analytics.data.repository.model.Event
 import com.verygoodsecurity.sdk.analytics.data.source.remote.DefaultAnalyticsRemoteDataSource
 
 // TODO: Consider trackRequest/trackResponse/trackInit functions names
-class AnalyticsManager internal constructor(private val container: Container) {
+class AnalyticsManager internal constructor(
+    private val vault: String,
+    private val container: Container
+) {
 
-    constructor() : this(container = Container())
+    constructor(vaultId: String) : this(
+        vault = vaultId,
+        container = Container()
+    )
 
     private val repository: AnalyticsRepository = container.getAnalyticsRepository()
 
     suspend fun capture() {
-        repository.capture(Event(tnt = ""))
+        repository.capture(Event(tnt = vault))
     }
 }
 
