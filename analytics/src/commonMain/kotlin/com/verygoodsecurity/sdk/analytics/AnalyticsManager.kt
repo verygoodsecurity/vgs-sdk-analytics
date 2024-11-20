@@ -1,4 +1,4 @@
-package com.verygoodsecurity.sdk.analytics.data
+package com.verygoodsecurity.sdk.analytics
 
 import com.verygoodsecurity.sdk.analytics.data.repository.AnalyticsRepository
 import com.verygoodsecurity.sdk.analytics.data.repository.DefaultAnalyticsRepository
