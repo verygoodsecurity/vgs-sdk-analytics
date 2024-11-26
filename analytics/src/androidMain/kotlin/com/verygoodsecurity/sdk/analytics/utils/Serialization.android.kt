@@ -4,7 +4,6 @@ import android.util.Base64
 import com.verygoodsecurity.sdk.analytics.BuildConfig
 import org.json.JSONObject
 
-
 internal actual fun Map<String, Any>.toBase64Json(): String? {
     return try {
         val json = JSONObject(this).toString()
