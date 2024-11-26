@@ -6,7 +6,6 @@ import com.verygoodsecurity.sdk.analytics.data.repository.Mapper
 import com.verygoodsecurity.sdk.analytics.data.source.remote.DefaultAnalyticsRemoteDataSource
 import com.verygoodsecurity.sdk.analytics.model.Event
 import com.verygoodsecurity.sdk.analytics.model.Status
-import com.verygoodsecurity.sdk.analytics.model.Upstream
 import com.verygoodsecurity.sdk.analytics.utils.Session
 import com.verygoodsecurity.sdk.analytics.utils.deviceInfo
 import com.verygoodsecurity.sdk.analytics.utils.randomUUID
