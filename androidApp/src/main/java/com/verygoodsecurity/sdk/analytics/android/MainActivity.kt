@@ -13,30 +13,36 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.verygoodsecurity.sdk.analytics.AnalyticsManager
-import kotlinx.coroutines.launch
+import com.verygoodsecurity.sdk.analytics.model.Event
 
 class MainActivity : ComponentActivity() {
 
-    private val analyticsManager = AnalyticsManager(vaultId = "")
+    private val analyticsManager =
+        AnalyticsManager(
+            vault = "<TENANT>",
+            environment = "sandbox",
+            source = "androidSDK",
+            sourceVersion = "1.0.0"
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val coroutineScope = rememberCoroutineScope()
-
             MyApplicationTheme {
                 Content(
                     title = "",
                     onButtonClick = {
-                        coroutineScope.launch {
-                            analyticsManager.capture()
-                        }
+                        analyticsManager.capture(
+                            Event.FieldInit(
+                                fieldType = "test",
+                                contentPath = "test"
+                            )
+                        )
                     }
                 )
             }
