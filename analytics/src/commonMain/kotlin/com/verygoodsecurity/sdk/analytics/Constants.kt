@@ -33,9 +33,20 @@ internal data object EventParams {
     const val SCAN_ID = "scanId"
     const val SCANNER_TYPE = "scannerType"
     const val SCAN_DETAILS = "details"
+    const val UPSTREAM = "upstream"
+    const val CONTENT = "content"
+    const val ERROR = "error"
 }
 
-internal data object Http {
+data object EventValues {
 
-    const val SUCCESS_STATUS_CODE = 200
+    const val CUSTOM_HOSTNAME = "custom_hostname"
+    const val FILE = "file"
+    const val FIELD = "textField"
+    const val CUSTOM_HEADER = "custom_header"
+    const val CUSTOM_DATA = "custom_data"
+    const val MAPPING_POLICY_NESTED_JSON = "nested_json"
+    const val MAPPING_POLICY_FLAT_JSON = "flat_json"
+    const val MAPPING_POLICY_NESTED_JSON_ARRAYS_MERGE = "nested_json_array_merge"
+    const val MAPPING_POLICY_NESTED_JSON_ARRAYS_OVERWRITE = "nested_json_array_overwrite"
 }

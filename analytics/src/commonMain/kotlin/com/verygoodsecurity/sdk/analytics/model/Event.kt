@@ -2,7 +2,6 @@ package com.verygoodsecurity.sdk.analytics.model
 
 import com.verygoodsecurity.sdk.analytics.EventParams
 import com.verygoodsecurity.sdk.analytics.EventTypes
-import com.verygoodsecurity.sdk.analytics.Http
 import com.verygoodsecurity.sdk.analytics.utils.currentTimeMillis
 import kotlin.jvm.JvmName
 
@@ -48,31 +47,39 @@ sealed class Event {
         )
     }
 
-    // TODO: Complete
     data class Request(
         private val status: Status,
-        private val code: Int = Http.SUCCESS_STATUS_CODE
+        private val code: Int,
+        private val errorMessage: String,
+        private val upstream: Upstream,
+        private val content: Map<String, Any>,
     ) : Event() {
 
         override val type: String = EventTypes.REQUEST
 
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.STATUS to status.capitalize(),
-            EventParams.STATUS_CODE to code
+            EventParams.STATUS_CODE to code,
+            EventParams.ERROR to errorMessage,
+            EventParams.UPSTREAM to upstream.name.lowercase(),
+            EventParams.CONTENT to content,
         )
     }
 
-    // TODO: Complete
     data class Response(
         private val status: Status,
-        private val code: Int = Http.SUCCESS_STATUS_CODE
+        private val code: Int,
+        private val errorMessage: String,
+        private val upstream: Upstream,
     ) : Event() {
 
         override val type: String = EventTypes.RESPONSE
 
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.STATUS to status.capitalize(),
-            EventParams.STATUS_CODE to code
+            EventParams.STATUS_CODE to code,
+            EventParams.ERROR to errorMessage,
+            EventParams.UPSTREAM to upstream.name.lowercase(),
         )
     }
 
