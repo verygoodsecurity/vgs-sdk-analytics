@@ -6,5 +6,6 @@ class AndroidGreetingTest {
 
     @Test
     fun testExample() {
+        throw IllegalStateException()
     }
 }
