@@ -1,0 +1,29 @@
+version: 2.1
+
+aliases:
+  - &android_environment
+    docker:
+      - image: cimg/android:2024.01
+    resource_class: large
+  - &ios_environment
+    macos:
+      xcode: 15.4
+    resource_class: large
+
+jobs:
+  run-android-unit-test:
+    <<: *android_environment
+    executor: android/android
+    steps:
+      - checkout
+  run-ios-unit-test:
+    <<: *ios_environment
+    executor: macos_exec
+    steps:
+      - checkout
+
+workflows:
+  main:
+    jobs:
+      - run-android-unit-test
+      - run-ios-unit-test
