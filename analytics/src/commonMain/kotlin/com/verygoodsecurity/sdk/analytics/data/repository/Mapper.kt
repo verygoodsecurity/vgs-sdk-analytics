@@ -6,6 +6,6 @@ import com.verygoodsecurity.sdk.analytics.data.source.remote.dto.Event as DTO
 internal class Mapper {
 
     fun toDTO(model: Model): DTO {
-        return DTO(model.tnt)
+        return DTO(model.params)
     }
 }
