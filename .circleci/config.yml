@@ -5,22 +5,18 @@ aliases:
     docker:
       - image: cimg/android:2024.01
     resource_class: large
-  - &ios_environment
-    macos:
-      xcode: 15.4
 
 jobs:
-  run-android-unit-test:
+  run-unit-test:
     <<: *android_environment
     steps:
       - checkout
-  run-ios-unit-test:
-    <<: *ios_environment
-    steps:
-      - checkout
+      - run:
+          name: Run Tests
+          command: ./gradlew :analytics:allTests
 
 workflows:
   main:
     jobs:
-      - "run-android-unit-test"
+      - "run-unit-test"
       - "run-ios-unit-test"
