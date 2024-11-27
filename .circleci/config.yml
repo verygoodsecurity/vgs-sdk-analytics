@@ -8,7 +8,6 @@ aliases:
   - &ios_environment
     macos:
       xcode: 15.4
-    resource_class: large
 
 jobs:
   run-android-unit-test:
