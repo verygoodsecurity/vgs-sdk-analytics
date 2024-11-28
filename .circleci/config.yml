@@ -44,9 +44,7 @@ jobs:
             echo 'export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"' >> $BASH_ENV
       - run:
           name: Install Android sdk
-          command: |
-            HOMEBREW_NO_AUTO_UPDATE=1 brew tap homebrew/cask
-            HOMEBREW_NO_AUTO_UPDATE=1 brew cask install android-sdk
+          command: brew cask install android-sdk
       - run:
           name: Run Tests
           command: ./gradlew :analytics:allTests
