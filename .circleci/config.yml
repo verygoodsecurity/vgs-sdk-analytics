@@ -16,7 +16,7 @@ jobs:
           command: |
             # Install Android SDK tools via Homebrew
             brew install --cask android-commandlinetools
-            brew info android-commandlinetools
+            yes | sdkmanager --licenses || true
             export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
             echo "ANDROID_HOME = $ANDROID_HOME"
             export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
