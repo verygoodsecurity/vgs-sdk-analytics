@@ -11,28 +11,33 @@ jobs:
     executor: macos-executor
     steps:
       - checkout
+#      - run:
+#          name: Install Android SDK Tools
+#          command: |
+#            # Install Android SDK tools via Homebrew
+#            brew install --cask android-platform-tools
+#            brew install --cask android-commandlinetools
+#            # Install Android build tools and platform tools
+#            yes | sdkmanager --licenses || true
+#            sdkmanager "build-tools;34.0.0" "platform-tools" "platforms;android-34"
+#      - run:
+#          name: Install Android Studio
+#          command: |
+#            # Install Android Studio tools via Homebrew
+#            brew install --cask android-studio
+#            echo "Setting up Android environment..."
+#            export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
+#            export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0
+#            echo "Android environment setup complete ANDROID_HOME=$ANDROID_HOME"
       - run:
-          name: Install Android SDK Tools
-          command: |
-            # Install Android SDK tools via Homebrew
-            brew install --cask android-platform-tools
-            brew install --cask android-commandlinetools
-            # Install Android build tools and platform tools
-            yes | sdkmanager --licenses || true
-            sdkmanager "build-tools;34.0.0" "platform-tools" "platforms;android-34"
+          name: Install Android SDK
+          command: brew install android-sdk
       - run:
-          name: Install Android Studio
-          command: |
-            # Install Android Studio tools via Homebrew
-            brew install --cask android-studio
-            echo "Setting up Android environment..."
-            export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
-            export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0
-            echo "Android environment setup complete ANDROID_HOME=$ANDROID_HOME"
+          name: Setup ANDROID_HOME
+          command: export ANDROID_HOME=/usr/local/opt/android-sdk
       - run:
           name: Run Tests
           command: ./gradlew :analytics:allTests
-
 
 workflows:
   main:
