@@ -8,15 +8,17 @@ aliases:
 
 jobs:
   run-unit-test:
-    <<: *android_environment
+    macos:
+      xcode: 15.4
     steps:
       - checkout
       - run:
-          name: Run Android Tests
-          command: ./gradlew :analytics:testDebugUnitTest
-      - run:
           name: Run iOS Tests
           command: ./gradlew :analytics:iosSimulatorArm64Test
+      - run:
+          name: Run Android Tests
+          command: ./gradlew :analytics:testDebugUnitTest
+
 
 workflows:
   main:
