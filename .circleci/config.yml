@@ -16,7 +16,7 @@ jobs:
           command: |
             # Install Android SDK tools via Homebrew
             brew install --cask android-commandlinetools
-            yes | sdkmanager --licenses || true
+#            yes | sdkmanager --licenses || true
       - run:
           name: Local
           command: echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" >> local.properties
