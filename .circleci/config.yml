@@ -17,10 +17,9 @@ jobs:
             # Install Android SDK tools via Homebrew
             brew install --cask android-commandlinetools
             yes | sdkmanager --licenses || true
-            export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
-            export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-            echo "export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools" >> ~/.bashrc
-            echo "export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools" >> ~/.bashrc
+      - run:
+          name: Local
+          command: echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" >> local.properties
       #      - run:
 #          name: Install Android Studio
 #          command: |
