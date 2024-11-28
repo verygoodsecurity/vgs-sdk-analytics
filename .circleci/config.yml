@@ -18,8 +18,10 @@ jobs:
             brew install --cask android-commandlinetools
             brew info android-commandlinetools
             export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
-            export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0
-#      - run:
+            echo "ANDROID_HOME = $ANDROID_HOME"
+            export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+            echo "PATH = $PATH"
+      #      - run:
 #          name: Install Android Studio
 #          command: |
 #            # Install Android Studio tools via Homebrew
