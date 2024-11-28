@@ -13,11 +13,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run iOS Tests
-          command: ./gradlew :analytics:iosSimulatorArm64Test
-      - run:
-          name: Run Android Tests
-          command: ./gradlew :analytics:testDebugUnitTest
+          name: Run Tests
+          command: ./gradlew :analytics:allTests
 
 
 workflows:
