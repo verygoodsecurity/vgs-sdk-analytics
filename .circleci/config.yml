@@ -12,6 +12,20 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install Android SDK Tools
+          command: |
+            # Install Android SDK tools via Homebrew
+            brew install --cask android-platform-tools
+            brew install --cask android-commandlinetools
+            # Install Android build tools and platform tools
+            yes | sdkmanager --licenses || true
+            sdkmanager "build-tools;34.0.0" "platform-tools" "platforms;android-34"
+            # Install Android Studio tools via Homebrew
+            echo "Setting up Android environment..."
+            export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
+            export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0
+             echo "Android environment setup complete ANDROID_HOME=$ANDROID_HOME"
+      - run:
           name: Run Tests
           command: ./gradlew :analytics:allTests
 
