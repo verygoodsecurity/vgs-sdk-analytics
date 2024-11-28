@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run:
           name: Run Tests
-          command: ./gradlew :analytics:allTests
+          command: ./gradlew :analytics:check
 
 workflows:
   main:
