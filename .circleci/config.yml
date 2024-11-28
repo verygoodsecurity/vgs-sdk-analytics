@@ -15,8 +15,8 @@ jobs:
           name: Install Android SDK Tools
           command: |
             # Install Android SDK tools via Homebrew
-            brew install --cask android-platform-tools
             brew install --cask android-commandlinetools
+            brew install --cask temurin
             export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
             export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0
 #      - run:
