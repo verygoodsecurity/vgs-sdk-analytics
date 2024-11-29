@@ -14,35 +14,9 @@ jobs:
       - run:
           name: Setup Android SDK
           command: |
-            # Install Android SDK tools via Homebrew
             brew install --cask android-commandlinetools
             yes | sdkmanager --licenses || true
             echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" >> local.properties
-      #      - run:
-#          name: Install Android Studio
-#          command: |
-#            # Install Android Studio tools via Homebrew
-#            brew install --cask android-studio
-#            echo "Setting up Android environment..."
-#            export ANDROID_HOME=/opt/homebrew/share/android-commandlinetools
-#            export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0
-#            echo "Android environment setup complete ANDROID_HOME=$ANDROID_HOME"
-#      - run:
-#          name: Install Android SDK
-#          command: brew install android-sdk
-#      - run:
-#          name: Setup ANDROID_HOME
-#          command: export ANDROID_HOME=/usr/local/opt/android-sdk
-#      - run:
-#          name: Setup environment variables
-#          command: |
-#            echo 'export PATH="$PATH:/usr/local/opt/node@8/bin:${HOME}/.yarn/bin:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin:/usr/local/share/android-sdk/tools/bin"' >> $BASH_ENV
-#            echo 'export ANDROID_HOME="/usr/local/share/android-sdk"' >> $BASH_ENV
-#            echo 'export ANDROID_SDK_HOME="/usr/local/share/android-sdk"' >> $BASH_ENV
-#            echo 'export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"' >> $BASH_ENV
-#      - run:
-#          name: Install Android sdk
-#          command: brew install android-commandlinetools
       - run:
           name: Run Tests
           command: ./gradlew :analytics:allTests

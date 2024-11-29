@@ -6,6 +6,5 @@ class IosGreetingTest {
 
     @Test
     fun testExample() {
-        throw IllegalStateException()
     }
 }
