@@ -1,0 +1,27 @@
+version: 2.1
+
+executors:
+  macos-executor:
+    resource_class: macos.m1.medium.gen1
+    macos:
+      xcode: 16.1.0
+
+jobs:
+  run-unit-test:
+    executor: macos-executor
+    steps:
+      - checkout
+      - run:
+          name: Setup Android SDK
+          command: |
+            brew install --cask android-commandlinetools
+            yes | sdkmanager --licenses || true
+            echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" >> local.properties
+      - run:
+          name: Run Tests
+          command: ./gradlew :analytics:allTests
+
+workflows:
+  main:
+    jobs:
+      - "run-unit-test"
