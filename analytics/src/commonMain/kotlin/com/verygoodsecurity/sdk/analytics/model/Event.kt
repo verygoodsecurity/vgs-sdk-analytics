@@ -2,6 +2,7 @@ package com.verygoodsecurity.sdk.analytics.model
 
 import com.verygoodsecurity.sdk.analytics.EventParams
 import com.verygoodsecurity.sdk.analytics.EventTypes
+import com.verygoodsecurity.sdk.analytics.EventValues
 import com.verygoodsecurity.sdk.analytics.utils.currentTimeMillis
 import kotlin.jvm.JvmName
 
@@ -9,7 +10,7 @@ sealed class Event {
 
     protected abstract val type: String
 
-    abstract val params: MutableMap<String, Any>
+    protected abstract val params: MutableMap<String, Any>
 
     private val timestamp: Long = currentTimeMillis()
 
@@ -39,48 +40,87 @@ sealed class Event {
         private val hostname: String,
     ) : Event() {
 
-        override val type: String = EventTypes.AUTOFILL
+        override val type: String = EventTypes.CNAME
 
         override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.STATUS to status.capitalize(),
+            EventParams.STATUS to status.getAnalyticsName(),
             EventParams.HOSTNAME to hostname,
         )
     }
 
-    data class Request(
-        private val status: Status,
-        private val code: Int,
-        private val errorMessage: String,
-        private val upstream: Upstream,
-        private val content: Map<String, Any>,
+    class Request private constructor(
+        status: Status,
+        code: Int,
+        upstream: Upstream,
+        content: List<String>,
     ) : Event() {
 
         override val type: String = EventTypes.REQUEST
 
         override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.STATUS to status.capitalize(),
+            EventParams.STATUS to status.getAnalyticsName(),
             EventParams.STATUS_CODE to code,
-            EventParams.ERROR to errorMessage,
-            EventParams.UPSTREAM to upstream.name.lowercase(),
+            EventParams.UPSTREAM to upstream.getAnalyticsName(),
             EventParams.CONTENT to content,
         )
+
+        class Builder(
+            private val status: Status,
+            private val code: Int,
+            private val upstream: Upstream,
+        ) {
+
+            private val content: MutableList<String> = mutableListOf()
+
+            fun customHostname() = this.also {
+                content.add(EventValues.CUSTOM_HOSTNAME)
+            }
+
+            fun customHeader() = this.also {
+                content.add(EventValues.CUSTOM_HEADER)
+            }
+
+            fun customData() = this.also {
+                content.add(EventValues.CUSTOM_DATA)
+            }
+
+            fun fields() = this.also {
+                content.add(EventValues.FIELDS)
+            }
+
+            fun files() = this.also {
+                content.add(EventValues.FILES)
+            }
+
+            fun mappingPolicy(policy: MappingPolicy) = this.also {
+                content.add(policy.getAnalyticsName())
+            }
+
+            fun build() = Request(
+                status = status,
+                code = code,
+                upstream = upstream,
+                content = content
+            )
+        }
     }
 
     data class Response(
         private val status: Status,
         private val code: Int,
-        private val errorMessage: String,
         private val upstream: Upstream,
+        private val errorMessage: String? = null,
     ) : Event() {
 
         override val type: String = EventTypes.RESPONSE
 
-        override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.STATUS to status.capitalize(),
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
+            EventParams.STATUS to status.getAnalyticsName(),
             EventParams.STATUS_CODE to code,
-            EventParams.ERROR to errorMessage,
-            EventParams.UPSTREAM to upstream.name.lowercase(),
-        )
+            EventParams.UPSTREAM to upstream.getAnalyticsName(),
+        ).apply {
+            errorMessage?.let { message -> put(EventParams.ERROR, message) }
+        }
     }
 
     data class Autofill(private val fieldType: String) : Event() {
@@ -97,12 +137,12 @@ sealed class Event {
         override val type: String = EventTypes.ATTACH_FILE
 
         override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.STATUS to status.capitalize(),
+            EventParams.STATUS to status.getAnalyticsName(),
         )
     }
 
     data class Scan(
-        val status: String,
+        val status: Status,
         val scanId: String,
         val scanDetails: String,
         val scannerType: String,
@@ -111,7 +151,7 @@ sealed class Event {
         override val type: String = EventTypes.SCAN
 
         override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.STATUS to status,
+            EventParams.STATUS to status.getAnalyticsName(),
             EventParams.SCAN_ID to scanId,
             EventParams.SCAN_DETAILS to scanDetails,
             EventParams.SCANNER_TYPE to scannerType,

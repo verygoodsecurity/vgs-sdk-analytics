@@ -5,6 +5,8 @@ enum class Upstream {
     TOKENIZATION,
     CUSTOM;
 
+    fun getAnalyticsName() = name.lowercase()
+
     companion object {
 
         fun get(isTokenization: Boolean): Upstream {

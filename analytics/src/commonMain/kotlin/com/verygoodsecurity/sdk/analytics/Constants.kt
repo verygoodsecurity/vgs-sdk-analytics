@@ -1,8 +1,9 @@
 package com.verygoodsecurity.sdk.analytics
 
-internal data object EventTypes {
+internal object EventTypes {
 
     const val FIELD_INIT = "Init"
+    const val CNAME = "HostNameValidation"
     const val REQUEST = "BeforeSubmit"
     const val RESPONSE = "Submit"
     const val AUTOFILL = "Autofill"
@@ -10,7 +11,7 @@ internal data object EventTypes {
     const val SCAN = "Scan"
 }
 
-internal data object EventParams {
+internal object EventParams {
 
     const val TYPE = "type"
     const val VAULT_ID = "tnt"
@@ -38,15 +39,11 @@ internal data object EventParams {
     const val ERROR = "error"
 }
 
-data object EventValues {
+internal object EventValues {
 
     const val CUSTOM_HOSTNAME = "custom_hostname"
-    const val FILE = "file"
-    const val FIELD = "textField"
     const val CUSTOM_HEADER = "custom_header"
     const val CUSTOM_DATA = "custom_data"
-    const val MAPPING_POLICY_NESTED_JSON = "nested_json"
-    const val MAPPING_POLICY_FLAT_JSON = "flat_json"
-    const val MAPPING_POLICY_NESTED_JSON_ARRAYS_MERGE = "nested_json_array_merge"
-    const val MAPPING_POLICY_NESTED_JSON_ARRAYS_OVERWRITE = "nested_json_array_overwrite"
+    const val FILES = "file"
+    const val FIELDS = "textField"
 }

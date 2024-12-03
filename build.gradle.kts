@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.kotlinSerialization).apply(false)
     alias(libs.plugins.kotlinCocoapods).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
+    alias(libs.plugins.mokkery).apply(false)
 }
