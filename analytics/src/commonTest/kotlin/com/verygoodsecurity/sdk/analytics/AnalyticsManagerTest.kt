@@ -2,31 +2,29 @@ package com.verygoodsecurity.sdk.analytics
 
 import com.verygoodsecurity.sdk.analytics.data.repository.AnalyticsRepository
 import com.verygoodsecurity.sdk.analytics.model.Event
+import dev.mokkery.answering.returns
+import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verify.VerifyMode.Companion.exactly
 import dev.mokkery.verifySuspend
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import kotlin.test.AfterTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class AnalyticsManagerTest {
 
-    private val dispatcher: TestDispatcher = StandardTestDispatcher()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val dispatcher: TestDispatcher = UnconfinedTestDispatcher()
 
-    private val scope: CoroutineScope = TestScope(dispatcher)
+    private val repository: AnalyticsRepository = mock<AnalyticsRepository>()
 
-    private val repository: AnalyticsRepository = mock { }
-
-    private val provider: FakeProvider = FakeProvider(scope, repository)
+    private val provider: FakeProvider = FakeProvider(TestScope(dispatcher), dispatcher, repository)
 
     private val analyticsManager = AnalyticsManager(
         vault = "testVault",
@@ -36,16 +34,9 @@ class AnalyticsManagerTest {
         provider = provider
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @BeforeTest
     fun setup() {
-        Dispatchers.setMain(dispatcher)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @AfterTest
-    fun tearDown() {
-        Dispatchers.resetMain()
+        everySuspend { repository.capture(any()) } returns Unit
     }
 
     @Test
@@ -62,11 +53,15 @@ class AnalyticsManagerTest {
 
     internal class FakeProvider(
         private val testScope: CoroutineScope,
+        private val testDispatcher: CoroutineDispatcher,
         private val repository: AnalyticsRepository
     ) : Provider() {
 
         override val scope: CoroutineScope
             get() = testScope
+
+        override val dispatcher: CoroutineDispatcher
+            get() = testDispatcher
 
         override fun getAnalyticsRepository(): AnalyticsRepository = repository
 
