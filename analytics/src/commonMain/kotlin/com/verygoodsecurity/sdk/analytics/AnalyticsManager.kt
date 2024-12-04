@@ -9,11 +9,11 @@ import com.verygoodsecurity.sdk.analytics.model.Status
 import com.verygoodsecurity.sdk.analytics.utils.Session
 import com.verygoodsecurity.sdk.analytics.utils.deviceInfo
 import com.verygoodsecurity.sdk.analytics.utils.randomUUID
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import com.verygoodsecurity.sdk.analytics.data.repository.model.Event as EventModel
@@ -29,11 +29,13 @@ class AnalyticsManager internal constructor(
 
     private val scope: CoroutineScope = provider.scope
 
+    private val dispatcher: CoroutineDispatcher = provider.dispatcher
+
     private val repository: AnalyticsRepository = provider.getAnalyticsRepository()
 
     private val defaultEventParams: Map<String, Any> = provider.getDefaultEventParams(
         vault = vault,
-        environment =  environment,
+        environment = environment,
         source = source,
         sourceVersion = sourceVersion
     )
@@ -47,14 +49,14 @@ class AnalyticsManager internal constructor(
     )
 
     fun capture(event: Event) {
-        scope.launch(Dispatchers.IO) {
+        scope.launch(dispatcher) {
             repository.capture(EventModel(params = event.getParams() + defaultEventParams))
         }
     }
 
     fun cancelAll() {
         try {
-            scope.cancel()
+            scope.coroutineContext.cancelChildren()
         } catch (_: IllegalStateException) {
         }
     }
@@ -64,6 +66,9 @@ internal open class Provider {
 
     open val scope: CoroutineScope
         get() = CoroutineScope(context = Job() + Dispatchers.Main)
+
+    open val dispatcher: CoroutineDispatcher
+        get() = Dispatchers.IO
 
     open fun getAnalyticsRepository(): AnalyticsRepository {
         return DefaultAnalyticsRepository(
