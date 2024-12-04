@@ -3,7 +3,7 @@ import analytics
 
 struct ContentView: View {
     
-    let analytics = AnalyticsManager(vault: "<TENANT>", environment: "sandbox", source: "iosSDK", sourceVersion: "1.0.0")
+    let analytics = AnalyticsManager(vault: "<TENANT>", environment: "sandbox", source: "analyticsIosDemo", sourceVersion: "1.0.0")
     
 	var body: some View {
         Button("Capture", action: capture)
