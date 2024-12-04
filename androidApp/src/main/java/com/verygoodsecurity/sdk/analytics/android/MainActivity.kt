@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         AnalyticsManager(
             vault = "<TENANT>",
             environment = "sandbox",
-            source = "androidSDK",
+            source = "analyticsAndroidDemo",
             sourceVersion = "1.0.0"
         )
 
