@@ -2,11 +2,16 @@ import SwiftUI
 import analytics
 
 struct ContentView: View {
-	let greet = Greeting().greet()
-
+    
+    let analytics = AnalyticsManager(vault: "<TENANT>", environment: "sandbox", source: "analyticsIosDemo", sourceVersion: "1.0.0")
+    
 	var body: some View {
-		Text(greet)
+        Button("Capture", action: capture)
 	}
+    
+    func capture() {
+        analytics.capture(event: Event.FieldInit(fieldType: "test", contentPath: "test"));
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
