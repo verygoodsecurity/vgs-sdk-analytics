@@ -35,6 +35,7 @@ internal object EventParams {
     const val DEVICE_OS_VERSION = "osVersion"
     const val FIELD_TYPE = "field"
     const val CONTENT_PATH = "contentPath"
+    const val UI = "ui"
     const val HOSTNAME = "hostname"
     const val SCAN_ID = "scanId"
     const val SCANNER_TYPE = "scannerType"
