@@ -117,6 +117,10 @@ sealed class Event {
                 content.add(EventValues.FILES)
             }
 
+            fun pdf() = this.also {
+                content.add(EventValues.PDF)
+            }
+
             fun build() = Request(
                 status = status,
                 code = code,
