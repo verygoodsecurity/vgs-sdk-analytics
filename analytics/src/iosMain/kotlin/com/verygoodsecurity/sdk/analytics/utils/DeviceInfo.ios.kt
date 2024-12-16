@@ -8,9 +8,5 @@ internal actual fun deviceInfo(): DeviceInfo {
         brand = UIDevice.currentDevice.model,
         model = UIDevice.currentDevice.name,
         osVersion = UIDevice.currentDevice.systemVersion,
-    ).also {
-        println(
-            "deviceInfo = $it"
-        )
-    }
+    )
 }

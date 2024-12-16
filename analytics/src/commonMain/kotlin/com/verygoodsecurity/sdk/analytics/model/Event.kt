@@ -22,12 +22,12 @@ sealed class Event {
         }
     }
 
-    data class FieldInit(
+    data class FieldAttach(
         private val fieldType: String,
         private val contentPath: String,
     ) : Event() {
 
-        override val type: String = EventTypes.FIELD_INIT
+        override val type: String = EventTypes.FIELD_ATTACH
 
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.FIELD_TYPE to fieldType,
@@ -35,17 +35,29 @@ sealed class Event {
         )
     }
 
+    data class FieldDetach(private val fieldType: String) : Event() {
+
+        override val type: String = EventTypes.FIELD_DETACH
+
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.FIELD_TYPE to fieldType,
+        )
+    }
+
     data class Cname(
         private val status: Status,
         private val hostname: String,
+        private val latency: Long? = null
     ) : Event() {
 
         override val type: String = EventTypes.CNAME
 
-        override val params: MutableMap<String, Any> = mutableMapOf(
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.STATUS to status.getAnalyticsName(),
             EventParams.HOSTNAME to hostname,
-        )
+        ).apply {
+            latency?.let { put(EventParams.LATENCY, latency) }
+        }
     }
 
     class Request private constructor(
@@ -119,7 +131,7 @@ sealed class Event {
             EventParams.STATUS_CODE to code,
             EventParams.UPSTREAM to upstream.getAnalyticsName(),
         ).apply {
-            errorMessage?.let { message -> put(EventParams.ERROR, message) }
+            errorMessage?.let { put(EventParams.ERROR, errorMessage) }
         }
     }
 
@@ -155,6 +167,56 @@ sealed class Event {
             EventParams.SCAN_ID to scanId,
             EventParams.SCAN_DETAILS to scanDetails,
             EventParams.SCANNER_TYPE to scannerType,
+        )
+    }
+
+    data class CopyToClipboard(
+        val fieldType: String,
+        val format: CopyFormat,
+        val triggerAction: String = EventValues.COPY_TO_CLIPBOARD_ACTION_CLICK,
+    ) : Event() {
+
+        override val type: String = EventTypes.COPY_TO_CLIPBOARD
+
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.FIELD_TYPE to fieldType,
+            EventParams.COPY_FORMAT to format.name.lowercase(),
+            EventParams.STATUS to triggerAction, // TODO: Rename param?
+        )
+    }
+
+    data class SecureTextRange(
+        val fieldType: String,
+        val contentPath: String,
+    ) : Event() {
+
+        override val type: String = EventTypes.SET_SECURE_TEXT_RANGE
+
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.FIELD_TYPE to fieldType,
+            EventParams.CONTENT_PATH to contentPath,
+        )
+    }
+
+    data class ContentRendering(
+        val fieldType: String,
+        val status: Status,
+    ) : Event() {
+
+        override val type: String = EventTypes.CONTENT_RENDERING
+
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.FIELD_TYPE to fieldType,
+            EventParams.STATUS to status.getAnalyticsName(),
+        )
+    }
+
+    data class ContentSharing(val fieldType: String) : Event() {
+
+        override val type: String = EventTypes.CONTENT_SHARING
+
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.FIELD_TYPE to fieldType,
         )
     }
 }

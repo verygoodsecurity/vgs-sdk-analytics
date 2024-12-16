@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     title = "",
                     onButtonClick = {
                         analyticsManager.capture(
-                            Event.FieldInit(
+                            Event.FieldAttach(
                                 fieldType = "test",
                                 contentPath = "test"
                             )
