@@ -66,8 +66,8 @@ sealed class Event {
     class Request private constructor(
         status: Status,
         code: Int,
-        upstream: Upstream,
         content: List<String>,
+        upstream: Upstream? = null,
     ) : Event() {
 
         override val type: String = EventTypes.REQUEST
@@ -75,9 +75,10 @@ sealed class Event {
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.STATUS to status.getAnalyticsName(),
             EventParams.STATUS_CODE to code,
-            EventParams.UPSTREAM to upstream.getAnalyticsName(),
             EventParams.CONTENT to content,
-        )
+        ).apply {
+            upstream?.let { put(EventParams.UPSTREAM, upstream.getAnalyticsName()) }
+        }
 
         class Builder(
             private val status: Status,
