@@ -54,5 +54,6 @@ internal object EventValues {
     const val CUSTOM_DATA = "custom_data"
     const val FILES = "file"
     const val FIELDS = "textField"
+    const val PDF = "pdf"
     const val COPY_TO_CLIPBOARD_ACTION_CLICK = "Clicked"
 }
