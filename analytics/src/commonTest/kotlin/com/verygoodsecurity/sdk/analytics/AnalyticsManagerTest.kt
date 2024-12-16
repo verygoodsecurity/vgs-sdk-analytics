@@ -42,7 +42,7 @@ class AnalyticsManagerTest {
     @Test
     fun capture_calledOnce() {
         // Arrange
-        val event = Event.FieldInit(fieldType = "testFieldType", contentPath = "testContentPath")
+        val event = Event.FieldAttach(fieldType = "testFieldType", contentPath = "testContentPath")
 
         // Act
         analyticsManager.capture(event)

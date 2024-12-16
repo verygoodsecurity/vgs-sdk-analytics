@@ -12,19 +12,33 @@ import kotlin.test.assertTrue
 class EventTest {
 
     @Test
-    fun fieldInit_correctParamsReturned() {
+    fun fieldAttach_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"
         val contentPath = "testPath"
-        val event = Event.FieldInit(fieldType, contentPath)
+        val event = Event.FieldAttach(fieldType, contentPath)
 
         // Act
         val params = event.getParams()
 
         // Assert
-        assertEquals(params[EventParams.TYPE], EventTypes.FIELD_INIT)
+        assertEquals(params[EventParams.TYPE], EventTypes.FIELD_ATTACH)
         assertEquals(params[EventParams.FIELD_TYPE], fieldType)
         assertEquals(params[EventParams.CONTENT_PATH], contentPath)
+    }
+
+    @Test
+    fun fieldDetach_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val event = Event.FieldDetach(fieldType)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.FIELD_DETACH)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
     }
 
     @Test
@@ -329,5 +343,82 @@ class EventTest {
         assertEquals(params[EventParams.SCAN_ID], scanId)
         assertEquals(params[EventParams.SCAN_DETAILS], scanDetails)
         assertEquals(params[EventParams.SCANNER_TYPE], scannerType)
+    }
+
+    @Test
+    fun copyToClipboard_raw_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val format = CopyFormat.RAW
+        val event = Event.CopyToClipboard(fieldType, format)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.COPY_TO_CLIPBOARD)
+        assertEquals(params[EventParams.COPY_FORMAT], format.getAnalyticsName())
+    }
+
+    @Test
+    fun secureTextRange_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val contentPath = "testContentPath"
+        val event = Event.SecureTextRange(fieldType, contentPath)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.SET_SECURE_TEXT_RANGE)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.CONTENT_PATH], contentPath)
+    }
+
+    @Test
+    fun contentRendering_statusOk_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val status = Status.OK
+        val event = Event.ContentRendering(fieldType, status)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+    }
+
+    @Test
+    fun contentRendering_statusFailed_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val status = Status.FAILED
+        val event = Event.ContentRendering(fieldType, status)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+    }
+
+    @Test
+    fun contentSharing_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val event = Event.ContentSharing(fieldType)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_SHARING)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
     }
 }

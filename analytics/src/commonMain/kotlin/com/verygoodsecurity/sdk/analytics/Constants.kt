@@ -2,13 +2,18 @@ package com.verygoodsecurity.sdk.analytics
 
 internal object EventTypes {
 
-    const val FIELD_INIT = "Init"
+    const val FIELD_ATTACH = "Init"
+    const val FIELD_DETACH = "UnsubscribeField"
     const val CNAME = "HostNameValidation"
     const val REQUEST = "BeforeSubmit"
     const val RESPONSE = "Submit"
     const val AUTOFILL = "Autofill"
     const val ATTACH_FILE = "AttachFile"
     const val SCAN = "Scan"
+    const val COPY_TO_CLIPBOARD = "Copy to clipboard click"
+    const val SET_SECURE_TEXT_RANGE = "SetSecureTextRange"
+    const val CONTENT_RENDERING = "ContentRendering"
+    const val CONTENT_SHARING = "ContentSharing"
 }
 
 internal object EventParams {
@@ -37,6 +42,8 @@ internal object EventParams {
     const val UPSTREAM = "upstream"
     const val CONTENT = "content"
     const val ERROR = "error"
+    const val COPY_FORMAT = "copy_format"
+    const val LATENCY = "latency"
 }
 
 internal object EventValues {
@@ -46,4 +53,5 @@ internal object EventValues {
     const val CUSTOM_DATA = "custom_data"
     const val FILES = "file"
     const val FIELDS = "textField"
+    const val COPY_TO_CLIPBOARD_ACTION_CLICK = "Clicked"
 }
