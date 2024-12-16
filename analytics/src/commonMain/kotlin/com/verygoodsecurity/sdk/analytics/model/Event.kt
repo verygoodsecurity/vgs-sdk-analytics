@@ -24,15 +24,18 @@ sealed class Event {
 
     data class FieldAttach(
         private val fieldType: String,
-        private val contentPath: String,
+        private val contentPath: String? = null,
+        private val ui: String? = null, // TODO: Use expected/actual for enum?
     ) : Event() {
 
         override val type: String = EventTypes.FIELD_ATTACH
 
-        override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.FIELD_TYPE to fieldType,
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
+            EventParams.FIELD_TYPE to fieldType
+        ).apply {
             EventParams.CONTENT_PATH to contentPath
-        )
+            EventParams.UI to ui
+        }
     }
 
     data class FieldDetach(private val fieldType: String) : Event() {
