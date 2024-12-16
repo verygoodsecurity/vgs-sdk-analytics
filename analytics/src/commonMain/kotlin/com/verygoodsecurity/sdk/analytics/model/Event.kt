@@ -82,11 +82,20 @@ sealed class Event {
 
         class Builder(
             private val status: Status,
-            private val code: Int,
-            private val upstream: Upstream,
+            private val code: Int
         ) {
 
+            private var upstream: Upstream? = null
+
             private val content: MutableList<String> = mutableListOf()
+
+            fun upstream(upstream: Upstream) = this.also {
+                this.upstream = upstream
+            }
+
+            fun mappingPolicy(policy: MappingPolicy) = this.also {
+                content.add(policy.getAnalyticsName())
+            }
 
             fun customHostname() = this.also {
                 content.add(EventValues.CUSTOM_HOSTNAME)
@@ -106,10 +115,6 @@ sealed class Event {
 
             fun files() = this.also {
                 content.add(EventValues.FILES)
-            }
-
-            fun mappingPolicy(policy: MappingPolicy) = this.also {
-                content.add(policy.getAnalyticsName())
             }
 
             fun build() = Request(
