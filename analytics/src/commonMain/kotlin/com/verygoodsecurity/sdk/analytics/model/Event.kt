@@ -33,8 +33,8 @@ sealed class Event {
         override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.FIELD_TYPE to fieldType
         ).apply {
-            EventParams.CONTENT_PATH to contentPath
-            EventParams.UI to ui
+            contentPath?.let { put(EventParams.CONTENT_PATH, contentPath) }
+            ui?.let { put(EventParams.UI, ui) }
         }
     }
 
