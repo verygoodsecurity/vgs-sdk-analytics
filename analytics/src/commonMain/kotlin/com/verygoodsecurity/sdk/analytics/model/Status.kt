@@ -4,7 +4,7 @@ enum class Status {
 
     OK,
     FAILED, // TODO: Consider rename this state to FAIL or CANCEL to CANCELED
-    CANCEL;
+    CANCELED;
 
     fun getAnalyticsName(): String {
         return name.lowercase().replaceFirstChar { char ->
