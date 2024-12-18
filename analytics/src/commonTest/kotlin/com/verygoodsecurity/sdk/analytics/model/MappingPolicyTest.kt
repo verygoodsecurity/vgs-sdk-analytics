@@ -11,10 +11,10 @@ class MappingPolicyTest {
         val policy = MappingPolicy.NESTED_JSON
 
         // Act
-        val analyticsName = policy.getAnalyticsName()
+        val analyticsName = policy.analyticsValue
 
         // Assert
-        assertEquals("nested_json", analyticsName)
+        assertEquals("nestedJson", analyticsName)
     }
 
     @Test
@@ -23,10 +23,10 @@ class MappingPolicyTest {
         val policy = MappingPolicy.FLAT_JSON
 
         // Act
-        val analyticsName = policy.getAnalyticsName()
+        val analyticsName = policy.analyticsValue
 
         // Assert
-        assertEquals("flat_json", analyticsName)
+        assertEquals("flatJson", analyticsName)
     }
 
     @Test
@@ -35,10 +35,10 @@ class MappingPolicyTest {
         val policy = MappingPolicy.NESTED_JSON_ARRAYS_MERGE
 
         // Act
-        val analyticsName = policy.getAnalyticsName()
+        val analyticsName = policy.analyticsValue
 
         // Assert
-        assertEquals("nested_json_arrays_merge", analyticsName)
+        assertEquals("nestedJsonArrayMerge", analyticsName)
     }
 
     @Test
@@ -47,9 +47,9 @@ class MappingPolicyTest {
         val policy = MappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE
 
         // Act
-        val analyticsName = policy.getAnalyticsName()
+        val analyticsName = policy.analyticsValue
 
         // Assert
-        assertEquals("nested_json_arrays_overwrite", analyticsName)
+        assertEquals("nestedJsonArrayOverwrite", analyticsName)
     }
 }

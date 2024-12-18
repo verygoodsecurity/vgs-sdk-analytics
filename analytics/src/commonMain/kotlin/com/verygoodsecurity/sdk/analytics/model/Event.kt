@@ -74,7 +74,7 @@ sealed class Event {
 
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.STATUS to status.getAnalyticsName(),
-            EventParams.STATUS_CODE to code,
+            EventParams.CODE to code,
             EventParams.CONTENT to content,
             EventParams.UPSTREAM to upstream.getAnalyticsName()
         )
@@ -88,7 +88,7 @@ sealed class Event {
             private val content: MutableList<String> = mutableListOf()
 
             fun mappingPolicy(policy: MappingPolicy) = this.also {
-                content.add(policy.getAnalyticsName())
+                content.add(policy.analyticsValue)
             }
 
             fun customHostname() = this.also {
@@ -127,7 +127,6 @@ sealed class Event {
     data class Response(
         private val status: Status,
         private val code: Int,
-        private val upstream: Upstream = Upstream.CUSTOM,
         private val errorMessage: String? = null,
     ) : Event() {
 
@@ -135,8 +134,7 @@ sealed class Event {
 
         override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.STATUS to status.getAnalyticsName(),
-            EventParams.STATUS_CODE to code,
-            EventParams.UPSTREAM to  upstream.getAnalyticsName(),
+            EventParams.CODE to code,
         ).apply {
             errorMessage?.let { put(EventParams.ERROR, errorMessage) }
         }
@@ -179,8 +177,7 @@ sealed class Event {
 
     data class CopyToClipboard(
         val fieldType: String,
-        val format: CopyFormat,
-        val triggerAction: String = EventValues.COPY_TO_CLIPBOARD_ACTION_CLICK,
+        val format: CopyFormat
     ) : Event() {
 
         override val type: String = EventTypes.COPY_TO_CLIPBOARD
@@ -188,7 +185,6 @@ sealed class Event {
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.FIELD_TYPE to fieldType,
             EventParams.COPY_FORMAT to format.name.lowercase(),
-            EventParams.STATUS to triggerAction, // TODO: Rename param?
         )
     }
 
@@ -205,25 +201,19 @@ sealed class Event {
         )
     }
 
-    data class ContentRendering(
-        val fieldType: String,
-        val status: Status,
-    ) : Event() {
+    data class ContentRendering(val status: Status) : Event() {
 
         override val type: String = EventTypes.CONTENT_RENDERING
 
         override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.FIELD_TYPE to fieldType,
-            EventParams.STATUS to status.getAnalyticsName(),
+            EventParams.STATUS to status.getAnalyticsName()
         )
     }
 
-    data class ContentSharing(val fieldType: String) : Event() {
+    class ContentSharing : Event() {
 
         override val type: String = EventTypes.CONTENT_SHARING
 
-        override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.FIELD_TYPE to fieldType,
-        )
+        override val params: MutableMap<String, Any> = mutableMapOf()
     }
 }

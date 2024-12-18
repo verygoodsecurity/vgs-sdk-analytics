@@ -1,11 +1,9 @@
 package com.verygoodsecurity.sdk.analytics.model
 
-enum class MappingPolicy {
+enum class MappingPolicy(internal val analyticsValue: String) {
 
-    NESTED_JSON,
-    FLAT_JSON,
-    NESTED_JSON_ARRAYS_MERGE,
-    NESTED_JSON_ARRAYS_OVERWRITE;
-
-    fun getAnalyticsName() = name.lowercase()
+    NESTED_JSON(analyticsValue = "nestedJson"),
+    FLAT_JSON(analyticsValue = "flatJson"),
+    NESTED_JSON_ARRAYS_MERGE(analyticsValue = "nestedJsonArrayMerge"),
+    NESTED_JSON_ARRAYS_OVERWRITE(analyticsValue = "nestedJsonArrayOverwrite")
 }
