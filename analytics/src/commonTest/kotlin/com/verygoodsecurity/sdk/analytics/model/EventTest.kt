@@ -12,19 +12,33 @@ import kotlin.test.assertTrue
 class EventTest {
 
     @Test
-    fun fieldInit_correctParamsReturned() {
+    fun fieldAttach_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"
         val contentPath = "testPath"
-        val event = Event.FieldInit(fieldType, contentPath)
+        val event = Event.FieldAttach(fieldType, contentPath)
 
         // Act
         val params = event.getParams()
 
         // Assert
-        assertEquals(params[EventParams.TYPE], EventTypes.FIELD_INIT)
+        assertEquals(params[EventParams.TYPE], EventTypes.FIELD_ATTACH)
         assertEquals(params[EventParams.FIELD_TYPE], fieldType)
         assertEquals(params[EventParams.CONTENT_PATH], contentPath)
+    }
+
+    @Test
+    fun fieldDetach_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val event = Event.FieldDetach(fieldType)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.FIELD_DETACH)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
     }
 
     @Test
@@ -82,14 +96,14 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.REQUEST)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
+        assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
         assertTrue(content.contains(EventValues.CUSTOM_HOSTNAME))
         assertTrue(content.contains(EventValues.CUSTOM_HEADER))
         assertTrue(content.contains(EventValues.CUSTOM_DATA))
         assertTrue(content.contains(EventValues.FIELDS))
         assertTrue(content.contains(EventValues.FILES))
-        assertTrue(content.contains(MappingPolicy.NESTED_JSON.getAnalyticsName()))
+        assertTrue(content.contains(MappingPolicy.NESTED_JSON.analyticsValue))
     }
 
     @Test
@@ -110,9 +124,9 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.REQUEST)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
+        assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
-        assertTrue(content.contains(MappingPolicy.NESTED_JSON_ARRAYS_MERGE.getAnalyticsName()))
+        assertTrue(content.contains(MappingPolicy.NESTED_JSON_ARRAYS_MERGE.analyticsValue))
     }
 
     @Test
@@ -133,9 +147,9 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.REQUEST)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
+        assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
-        assertTrue(content.contains(MappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE.getAnalyticsName()))
+        assertTrue(content.contains(MappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE.analyticsValue))
     }
 
     @Test
@@ -156,9 +170,9 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.REQUEST)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
+        assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
-        assertTrue(content.contains(MappingPolicy.FLAT_JSON.getAnalyticsName()))
+        assertTrue(content.contains(MappingPolicy.FLAT_JSON.analyticsValue))
     }
 
     @Test
@@ -177,7 +191,7 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.REQUEST)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
+        assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
         assertTrue(content.isEmpty())
     }
@@ -187,9 +201,8 @@ class EventTest {
         // Arrange
         val status = Status.OK
         val code = 200
-        val upstream = Upstream.get(true)
 
-        val event = Event.Response(status, code, upstream)
+        val event = Event.Response(status, code)
 
         // Act
         val params = event.getParams()
@@ -197,8 +210,7 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.RESPONSE)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
-        assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
+        assertEquals(params[EventParams.CODE], code)
         assertFalse(params.contains(EventParams.ERROR))
     }
 
@@ -207,10 +219,9 @@ class EventTest {
         // Arrange
         val status = Status.OK
         val code = 200
-        val upstream = Upstream.get(false)
         val errorMessage = "Test error"
 
-        val event = Event.Response(status, code, upstream, errorMessage)
+        val event = Event.Response(status, code, errorMessage)
 
         // Act
         val params = event.getParams()
@@ -218,8 +229,7 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.RESPONSE)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
-        assertEquals(params[EventParams.STATUS_CODE], code)
-        assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
+        assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.ERROR], errorMessage)
     }
 
@@ -313,7 +323,7 @@ class EventTest {
     @Test
     fun scan_statusCancel_correctParamsReturned() {
         // Arrange
-        val status = Status.CANCEL
+        val status = Status.CANCELED
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
         val scannerType = "testScannerType"
@@ -329,5 +339,76 @@ class EventTest {
         assertEquals(params[EventParams.SCAN_ID], scanId)
         assertEquals(params[EventParams.SCAN_DETAILS], scanDetails)
         assertEquals(params[EventParams.SCANNER_TYPE], scannerType)
+    }
+
+    @Test
+    fun copyToClipboard_raw_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val format = CopyFormat.RAW
+        val event = Event.CopyToClipboard(fieldType, format)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.COPY_TO_CLIPBOARD)
+        assertEquals(params[EventParams.COPY_FORMAT], format.getAnalyticsName())
+    }
+
+    @Test
+    fun secureTextRange_correctParamsReturned() {
+        // Arrange
+        val fieldType = "testType"
+        val contentPath = "testContentPath"
+        val event = Event.SecureTextRange(fieldType, contentPath)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.SET_SECURE_TEXT_RANGE)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.CONTENT_PATH], contentPath)
+    }
+
+    @Test
+    fun contentRendering_statusOk_correctParamsReturned() {
+        // Arrange
+        val status = Status.OK
+        val event = Event.ContentRendering(status)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
+        assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+    }
+
+    @Test
+    fun contentRendering_statusFailed_correctParamsReturned() {
+        // Arrange
+        val status = Status.FAILED
+        val event = Event.ContentRendering(status)
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
+        assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+    }
+
+    @Test
+    fun contentSharing_correctParamsReturned() {
+        // Arrange
+        val event = Event.ContentSharing()
+
+        // Act
+        val params = event.getParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_SHARING)
     }
 }

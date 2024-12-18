@@ -10,7 +10,7 @@ struct ContentView: View {
 	}
     
     func capture() {
-        analytics.capture(event: Event.FieldInit(fieldType: "test", contentPath: "test"));
+        analytics.capture(event: Event.FieldAttach(fieldType: "test", contentPath: "test"));
     }
 }
 
