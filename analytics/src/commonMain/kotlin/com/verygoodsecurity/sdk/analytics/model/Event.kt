@@ -67,7 +67,7 @@ sealed class Event {
         status: Status,
         code: Int,
         content: List<String>,
-        upstream: Upstream? = null,
+        upstream: Upstream,
     ) : Event() {
 
         override val type: String = EventTypes.REQUEST
@@ -76,22 +76,16 @@ sealed class Event {
             EventParams.STATUS to status.getAnalyticsName(),
             EventParams.STATUS_CODE to code,
             EventParams.CONTENT to content,
-        ).apply {
-            upstream?.let { put(EventParams.UPSTREAM, upstream.getAnalyticsName()) }
-        }
+            EventParams.UPSTREAM to upstream.getAnalyticsName()
+        )
 
         class Builder(
             private val status: Status,
-            private val code: Int
+            private val code: Int,
+            private val upstream: Upstream = Upstream.CUSTOM
         ) {
 
-            private var upstream: Upstream? = null
-
             private val content: MutableList<String> = mutableListOf()
-
-            fun upstream(upstream: Upstream) = this.also {
-                this.upstream = upstream
-            }
 
             fun mappingPolicy(policy: MappingPolicy) = this.also {
                 content.add(policy.getAnalyticsName())
@@ -133,7 +127,7 @@ sealed class Event {
     data class Response(
         private val status: Status,
         private val code: Int,
-        private val upstream: Upstream? = null,
+        private val upstream: Upstream = Upstream.CUSTOM,
         private val errorMessage: String? = null,
     ) : Event() {
 
@@ -142,8 +136,8 @@ sealed class Event {
         override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.STATUS to status.getAnalyticsName(),
             EventParams.STATUS_CODE to code,
+            EventParams.UPSTREAM to  upstream.getAnalyticsName(),
         ).apply {
-            upstream?.let { put(EventParams.UPSTREAM, upstream.getAnalyticsName()) }
             errorMessage?.let { put(EventParams.ERROR, errorMessage) }
         }
     }
