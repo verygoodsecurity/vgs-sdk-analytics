@@ -32,12 +32,12 @@ class StatusTest {
     @Test
     fun getAnalyticsName_statusCancel_correctReturned() {
         // Arrange
-        val status = Status.CANCEL
+        val status = Status.CANCELED
 
         // Act
         val analyticsName = status.getAnalyticsName()
 
         // Assert
-        assertEquals("Cancel", analyticsName)
+        assertEquals("Canceled", analyticsName)
     }
 }

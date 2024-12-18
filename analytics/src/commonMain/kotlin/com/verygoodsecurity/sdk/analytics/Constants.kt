@@ -2,13 +2,18 @@ package com.verygoodsecurity.sdk.analytics
 
 internal object EventTypes {
 
-    const val FIELD_INIT = "Init"
+    const val FIELD_ATTACH = "Init"
+    const val FIELD_DETACH = "UnsubscribeField"
     const val CNAME = "HostNameValidation"
-    const val REQUEST = "BeforeSubmit"
-    const val RESPONSE = "Submit"
+    const val REQUEST = "Request"
+    const val RESPONSE = "Response"
     const val AUTOFILL = "Autofill"
     const val ATTACH_FILE = "AttachFile"
     const val SCAN = "Scan"
+    const val COPY_TO_CLIPBOARD = "CopyToClipboard"
+    const val SET_SECURE_TEXT_RANGE = "SetSecureTextRange"
+    const val CONTENT_RENDERING = "ContentRendering"
+    const val CONTENT_SHARING = "ContentSharing"
 }
 
 internal object EventParams {
@@ -22,14 +27,15 @@ internal object EventParams {
     const val SOURCE = "source"
     const val TIMESTAMP = "localTimestamp"
     const val STATUS = "status"
-    const val STATUS_CODE = "statusCode"
+    const val CODE = "code"
     const val UA = "ua"
     const val DEVICE_PLATFORM = "platform"
     const val DEVICE_BRAND = "device"
     const val DEVICE_MODEL = "deviceModel"
     const val DEVICE_OS_VERSION = "osVersion"
-    const val FIELD_TYPE = "field"
+    const val FIELD_TYPE = "fieldType"
     const val CONTENT_PATH = "contentPath"
+    const val UI = "ui"
     const val HOSTNAME = "hostname"
     const val SCAN_ID = "scanId"
     const val SCANNER_TYPE = "scannerType"
@@ -37,13 +43,16 @@ internal object EventParams {
     const val UPSTREAM = "upstream"
     const val CONTENT = "content"
     const val ERROR = "error"
+    const val COPY_FORMAT = "copyFormat"
+    const val LATENCY = "latency"
 }
 
 internal object EventValues {
 
-    const val CUSTOM_HOSTNAME = "custom_hostname"
-    const val CUSTOM_HEADER = "custom_header"
-    const val CUSTOM_DATA = "custom_data"
+    const val CUSTOM_HOSTNAME = "customHostname"
+    const val CUSTOM_HEADER = "customHeader"
+    const val CUSTOM_DATA = "customData"
     const val FILES = "file"
     const val FIELDS = "textField"
+    const val PDF = "pdf"
 }
