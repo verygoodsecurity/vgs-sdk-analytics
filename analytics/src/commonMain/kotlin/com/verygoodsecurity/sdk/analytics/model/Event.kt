@@ -127,6 +127,7 @@ sealed class Event {
     data class Response(
         private val status: Status,
         private val code: Int,
+        private val upstream: Upstream = Upstream.CUSTOM,
         private val errorMessage: String? = null,
     ) : Event() {
 
@@ -135,6 +136,7 @@ sealed class Event {
         override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.STATUS to status.getAnalyticsName(),
             EventParams.CODE to code,
+            EventParams.UPSTREAM to upstream.getAnalyticsName(),
         ).apply {
             errorMessage?.let { put(EventParams.ERROR, errorMessage) }
         }
