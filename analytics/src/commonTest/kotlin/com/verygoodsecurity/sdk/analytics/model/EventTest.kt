@@ -219,9 +219,10 @@ class EventTest {
         // Arrange
         val status = Status.OK
         val code = 200
+        val upstream = Upstream.TOKENIZATION
         val errorMessage = "Test error"
 
-        val event = Event.Response(status, code, errorMessage)
+        val event = Event.Response(status, code, upstream, errorMessage)
 
         // Act
         val params = event.getParams()
@@ -230,6 +231,7 @@ class EventTest {
         assertEquals(params[EventParams.TYPE], EventTypes.RESPONSE)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
         assertEquals(params[EventParams.CODE], code)
+        assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
         assertEquals(params[EventParams.ERROR], errorMessage)
     }
 
