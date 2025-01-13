@@ -27,6 +27,8 @@ class AnalyticsManager internal constructor(
     private val provider: Provider
 ) {
 
+    var isEnabled: Boolean = true
+
     private val scope: CoroutineScope = provider.scope
 
     private val dispatcher: CoroutineDispatcher = provider.dispatcher
@@ -40,7 +42,12 @@ class AnalyticsManager internal constructor(
         sourceVersion = sourceVersion
     )
 
-    constructor(vault: String, environment: String, source: String, sourceVersion: String) : this(
+    constructor(
+        vault: String,
+        environment: String,
+        source: String,
+        sourceVersion: String,
+    ) : this(
         vault = vault,
         environment = environment,
         source = source,
@@ -48,9 +55,15 @@ class AnalyticsManager internal constructor(
         provider = Provider()
     )
 
+    fun setIsEnabled(isEnabled: Boolean) {
+        this.isEnabled = isEnabled
+    }
+
     fun capture(event: Event) {
-        scope.launch(dispatcher) {
-            repository.capture(EventModel(params = event.getParams() + defaultEventParams))
+        if (isEnabled) {
+            scope.launch(dispatcher) {
+                repository.capture(EventModel(params = event.getParams() + defaultEventParams))
+            }
         }
     }
 
