@@ -27,7 +27,7 @@ internal object EventParams {
     const val SOURCE = "source"
     const val TIMESTAMP = "localTimestamp"
     const val STATUS = "status"
-    const val CODE = "code"
+    const val CODE = "statusCode"
     const val UA = "ua"
     const val DEVICE_PLATFORM = "platform"
     const val DEVICE_BRAND = "device"
