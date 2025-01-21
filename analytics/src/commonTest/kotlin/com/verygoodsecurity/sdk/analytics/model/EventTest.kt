@@ -202,7 +202,7 @@ class EventTest {
         val status = VGSAnalyticsStatus.OK
         val code = 200
 
-        val event = VGSAnalyticsEvent.Response(status, code)
+        val event = VGSAnalyticsEvent.Response(status, code, errorMessage = null)
 
         // Act
         val params = event.getParams()
@@ -347,14 +347,17 @@ class EventTest {
     fun copyToClipboard_raw_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"
+        val contentPath = "testContentPath"
         val format = VGSAnalyticsCopyFormat.RAW
-        val event = VGSAnalyticsEvent.CopyToClipboard(fieldType, format)
+        val event = VGSAnalyticsEvent.CopyToClipboard(fieldType, contentPath, format)
 
         // Act
         val params = event.getParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.COPY_TO_CLIPBOARD)
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.CONTENT_PATH], contentPath)
         assertEquals(params[EventParams.COPY_FORMAT], format.getAnalyticsName())
     }
 
@@ -378,7 +381,9 @@ class EventTest {
     fun contentRendering_statusOk_correctParamsReturned() {
         // Arrange
         val status = VGSAnalyticsStatus.OK
-        val event = VGSAnalyticsEvent.ContentRendering(status)
+        val fieldType = "testType"
+        val contentPath = "testContentPath"
+        val event = VGSAnalyticsEvent.ContentRendering(status, fieldType, contentPath)
 
         // Act
         val params = event.getParams()
@@ -386,13 +391,17 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.CONTENT_PATH], contentPath)
     }
 
     @Test
     fun contentRendering_statusFailed_correctParamsReturned() {
         // Arrange
         val status = VGSAnalyticsStatus.FAILED
-        val event = VGSAnalyticsEvent.ContentRendering(status)
+        val fieldType = "testType"
+        val contentPath = "testContentPath"
+        val event = VGSAnalyticsEvent.ContentRendering(status, fieldType, contentPath)
 
         // Act
         val params = event.getParams()
@@ -400,17 +409,21 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+        assertEquals(params[EventParams.FIELD_TYPE], fieldType)
+        assertEquals(params[EventParams.CONTENT_PATH], contentPath)
     }
 
     @Test
     fun contentSharing_correctParamsReturned() {
         // Arrange
-        val event = VGSAnalyticsEvent.ContentSharing()
+        val contentPath = "testContentPath"
+        val event = VGSAnalyticsEvent.ContentSharing(contentPath)
 
         // Act
         val params = event.getParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_SHARING)
+        assertEquals(params[EventParams.CONTENT_PATH], contentPath)
     }
 }
