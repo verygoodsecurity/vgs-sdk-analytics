@@ -8,7 +8,7 @@ class StatusTest {
     @Test
     fun getAnalyticsName_statusOk_correctReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
 
         // Act
         val analyticsName = status.getAnalyticsName()
@@ -20,7 +20,7 @@ class StatusTest {
     @Test
     fun getAnalyticsName_statusFailed_correctReturned() {
         // Arrange
-        val status = Status.FAILED
+        val status = VGSAnalyticsStatus.FAILED
 
         // Act
         val analyticsName = status.getAnalyticsName()
@@ -32,7 +32,7 @@ class StatusTest {
     @Test
     fun getAnalyticsName_statusCancel_correctReturned() {
         // Arrange
-        val status = Status.CANCELED
+        val status = VGSAnalyticsStatus.CANCELED
 
         // Act
         val analyticsName = status.getAnalyticsName()

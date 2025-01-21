@@ -1,9 +1,9 @@
 package com.verygoodsecurity.sdk.analytics.model
 
-enum class Status {
+enum class VGSAnalyticsStatus {
 
     OK,
-    FAILED, // TODO: Consider rename this state to FAIL or CANCEL to CANCELED
+    FAILED,
     CANCELED;
 
     fun getAnalyticsName(): String {

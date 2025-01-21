@@ -11,10 +11,10 @@ class UpstreamTest {
         val isTokenization = true
 
         // Act
-        val upstream = Upstream.get(isTokenization)
+        val upstream = VGSAnalyticsUpstream.get(isTokenization)
 
         // Assert
-        assertEquals(Upstream.TOKENIZATION, upstream)
+        assertEquals(VGSAnalyticsUpstream.TOKENIZATION, upstream)
     }
 
     @Test
@@ -23,16 +23,16 @@ class UpstreamTest {
         val isTokenization = false
 
         // Act
-        val upstream = Upstream.get(isTokenization)
+        val upstream = VGSAnalyticsUpstream.get(isTokenization)
 
         // Assert
-        assertEquals(Upstream.CUSTOM, upstream)
+        assertEquals(VGSAnalyticsUpstream.CUSTOM, upstream)
     }
 
     @Test
     fun getAnalyticsName_upstreamTokenization_correctReturned() {
         // Arrange
-        val upstream = Upstream.TOKENIZATION
+        val upstream = VGSAnalyticsUpstream.TOKENIZATION
 
         // Act
         val analyticsName = upstream.getAnalyticsName()
@@ -44,7 +44,7 @@ class UpstreamTest {
     @Test
     fun getAnalyticsName_upstreamCustom_correctReturned() {
         // Arrange
-        val upstream = Upstream.CUSTOM
+        val upstream = VGSAnalyticsUpstream.CUSTOM
 
         // Act
         val analyticsName = upstream.getAnalyticsName()

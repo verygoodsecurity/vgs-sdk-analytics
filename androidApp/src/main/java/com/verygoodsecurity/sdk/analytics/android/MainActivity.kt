@@ -17,13 +17,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.verygoodsecurity.sdk.analytics.AnalyticsManager
-import com.verygoodsecurity.sdk.analytics.model.Event
+import com.verygoodsecurity.sdk.analytics.VGSSharedAnalyticsManager
+import com.verygoodsecurity.sdk.analytics.model.VGSAnalyticsEvent
 
 class MainActivity : ComponentActivity() {
 
     private val analyticsManager =
-        AnalyticsManager(
+        VGSSharedAnalyticsManager(
             vault = "<TENANT>",
             environment = "sandbox",
             source = "analyticsAndroidDemo",
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     title = "",
                     onButtonClick = {
                         analyticsManager.capture(
-                            Event.FieldAttach(
+                            VGSAnalyticsEvent.FieldAttach(
                                 fieldType = "test",
                                 contentPath = "test"
                             )

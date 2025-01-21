@@ -16,7 +16,7 @@ class EventTest {
         // Arrange
         val fieldType = "testType"
         val contentPath = "testPath"
-        val event = Event.FieldAttach(fieldType, contentPath)
+        val event = VGSAnalyticsEvent.FieldAttach(fieldType, contentPath)
 
         // Act
         val params = event.getParams()
@@ -31,7 +31,7 @@ class EventTest {
     fun fieldDetach_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"
-        val event = Event.FieldDetach(fieldType)
+        val event = VGSAnalyticsEvent.FieldDetach(fieldType)
 
         // Act
         val params = event.getParams()
@@ -44,9 +44,9 @@ class EventTest {
     @Test
     fun cname_statusOk_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val hostname = "testHostname"
-        val event = Event.Cname(status, hostname)
+        val event = VGSAnalyticsEvent.Cname(status, hostname)
 
         // Act
         val params = event.getParams()
@@ -60,9 +60,9 @@ class EventTest {
     @Test
     fun cname_statusFailed_correctParamsReturned() {
         // Arrange
-        val status = Status.FAILED
+        val status = VGSAnalyticsStatus.FAILED
         val hostname = "testHostname"
-        val event = Event.Cname(status, hostname)
+        val event = VGSAnalyticsEvent.Cname(status, hostname)
 
         // Act
         val params = event.getParams()
@@ -76,17 +76,17 @@ class EventTest {
     @Test
     fun request_statusOk_nestedJson_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = Upstream.get(false)
+        val upstream = VGSAnalyticsUpstream.get(false)
 
-        val event = Event.Request.Builder(status, code, upstream)
+        val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
             .customHostname()
             .customHeader()
             .customData()
             .fields()
             .files()
-            .mappingPolicy(MappingPolicy.NESTED_JSON)
+            .mappingPolicy(VGSAnalyticsMappingPolicy.NESTED_JSON)
             .build()
 
         // Act
@@ -103,18 +103,18 @@ class EventTest {
         assertTrue(content.contains(EventValues.CUSTOM_DATA))
         assertTrue(content.contains(EventValues.FIELDS))
         assertTrue(content.contains(EventValues.FILES))
-        assertTrue(content.contains(MappingPolicy.NESTED_JSON.analyticsValue))
+        assertTrue(content.contains(VGSAnalyticsMappingPolicy.NESTED_JSON.analyticsValue))
     }
 
     @Test
     fun request_statusOk_nestedJsonWithArrayMerge_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = Upstream.get(false)
+        val upstream = VGSAnalyticsUpstream.get(false)
 
-        val event = Event.Request.Builder(status, code, upstream)
-            .mappingPolicy(MappingPolicy.NESTED_JSON_ARRAYS_MERGE)
+        val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
+            .mappingPolicy(VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_MERGE)
             .build()
 
         // Act
@@ -126,18 +126,18 @@ class EventTest {
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
         assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
-        assertTrue(content.contains(MappingPolicy.NESTED_JSON_ARRAYS_MERGE.analyticsValue))
+        assertTrue(content.contains(VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_MERGE.analyticsValue))
     }
 
     @Test
     fun request_statusOk_nestedJsonWithArrayOverwrite_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = Upstream.get(false)
+        val upstream = VGSAnalyticsUpstream.get(false)
 
-        val event = Event.Request.Builder(status, code, upstream)
-            .mappingPolicy(MappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE)
+        val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
+            .mappingPolicy(VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE)
             .build()
 
         // Act
@@ -149,18 +149,18 @@ class EventTest {
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
         assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
-        assertTrue(content.contains(MappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE.analyticsValue))
+        assertTrue(content.contains(VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE.analyticsValue))
     }
 
     @Test
     fun request_statusFailed_flatJson_correctParamsReturned() {
         // Arrange
-        val status = Status.FAILED
+        val status = VGSAnalyticsStatus.FAILED
         val code = 500
-        val upstream = Upstream.get(false)
+        val upstream = VGSAnalyticsUpstream.get(false)
 
-        val event = Event.Request.Builder(status, code, upstream)
-            .mappingPolicy(MappingPolicy.FLAT_JSON)
+        val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
+            .mappingPolicy(VGSAnalyticsMappingPolicy.FLAT_JSON)
             .build()
 
         // Act
@@ -172,17 +172,17 @@ class EventTest {
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
         assertEquals(params[EventParams.CODE], code)
         assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
-        assertTrue(content.contains(MappingPolicy.FLAT_JSON.analyticsValue))
+        assertTrue(content.contains(VGSAnalyticsMappingPolicy.FLAT_JSON.analyticsValue))
     }
 
     @Test
     fun request_statusFailed_flatJson_emptyContent_tokenizationUpstream_correctParamsReturned() {
         // Arrange
-        val status = Status.FAILED
+        val status = VGSAnalyticsStatus.FAILED
         val code = 500
-        val upstream = Upstream.get(true)
+        val upstream = VGSAnalyticsUpstream.get(true)
 
-        val event = Event.Request.Builder(status, code, upstream).build()
+        val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream).build()
 
         // Act
         val params = event.getParams()
@@ -199,10 +199,10 @@ class EventTest {
     @Test
     fun response_statusOk_tokenizationUpstream_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val code = 200
 
-        val event = Event.Response(status, code)
+        val event = VGSAnalyticsEvent.Response(status, code)
 
         // Act
         val params = event.getParams()
@@ -217,12 +217,12 @@ class EventTest {
     @Test
     fun response_statusFailed_customUpstream_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = Upstream.TOKENIZATION
+        val upstream = VGSAnalyticsUpstream.TOKENIZATION
         val errorMessage = "Test error"
 
-        val event = Event.Response(status, code, upstream, errorMessage)
+        val event = VGSAnalyticsEvent.Response(status, code, upstream, errorMessage)
 
         // Act
         val params = event.getParams()
@@ -240,7 +240,7 @@ class EventTest {
         // Arrange
         val fieldType = "testType"
 
-        val event = Event.Autofill(fieldType)
+        val event = VGSAnalyticsEvent.Autofill(fieldType)
 
         // Act
         val params = event.getParams()
@@ -253,9 +253,9 @@ class EventTest {
     @Test
     fun attachFile_statusOk_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
 
-        val event = Event.AttachFile(status)
+        val event = VGSAnalyticsEvent.AttachFile(status)
 
         // Act
         val params = event.getParams()
@@ -268,9 +268,9 @@ class EventTest {
     @Test
     fun attachFile_statusFailed_correctParamsReturned() {
         // Arrange
-        val status = Status.FAILED
+        val status = VGSAnalyticsStatus.FAILED
 
-        val event = Event.AttachFile(status)
+        val event = VGSAnalyticsEvent.AttachFile(status)
 
         // Act
         val params = event.getParams()
@@ -283,12 +283,12 @@ class EventTest {
     @Test
     fun scan_statusOk_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
+        val status = VGSAnalyticsStatus.OK
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
         val scannerType = "testScannerType"
 
-        val event = Event.Scan(status, scanId, scanDetails, scannerType)
+        val event = VGSAnalyticsEvent.Scan(status, scanId, scanDetails, scannerType)
 
         // Act
         val params = event.getParams()
@@ -304,12 +304,12 @@ class EventTest {
     @Test
     fun scan_statusFailed_correctParamsReturned() {
         // Arrange
-        val status = Status.FAILED
+        val status = VGSAnalyticsStatus.FAILED
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
         val scannerType = "testScannerType"
 
-        val event = Event.Scan(status, scanId, scanDetails, scannerType)
+        val event = VGSAnalyticsEvent.Scan(status, scanId, scanDetails, scannerType)
 
         // Act
         val params = event.getParams()
@@ -325,12 +325,12 @@ class EventTest {
     @Test
     fun scan_statusCancel_correctParamsReturned() {
         // Arrange
-        val status = Status.CANCELED
+        val status = VGSAnalyticsStatus.CANCELED
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
         val scannerType = "testScannerType"
 
-        val event = Event.Scan(status, scanId, scanDetails, scannerType)
+        val event = VGSAnalyticsEvent.Scan(status, scanId, scanDetails, scannerType)
 
         // Act
         val params = event.getParams()
@@ -347,8 +347,8 @@ class EventTest {
     fun copyToClipboard_raw_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"
-        val format = CopyFormat.RAW
-        val event = Event.CopyToClipboard(fieldType, format)
+        val format = VGSAnalyticsCopyFormat.RAW
+        val event = VGSAnalyticsEvent.CopyToClipboard(fieldType, format)
 
         // Act
         val params = event.getParams()
@@ -363,7 +363,7 @@ class EventTest {
         // Arrange
         val fieldType = "testType"
         val contentPath = "testContentPath"
-        val event = Event.SecureTextRange(fieldType, contentPath)
+        val event = VGSAnalyticsEvent.SecureTextRange(fieldType, contentPath)
 
         // Act
         val params = event.getParams()
@@ -377,8 +377,8 @@ class EventTest {
     @Test
     fun contentRendering_statusOk_correctParamsReturned() {
         // Arrange
-        val status = Status.OK
-        val event = Event.ContentRendering(status)
+        val status = VGSAnalyticsStatus.OK
+        val event = VGSAnalyticsEvent.ContentRendering(status)
 
         // Act
         val params = event.getParams()
@@ -391,8 +391,8 @@ class EventTest {
     @Test
     fun contentRendering_statusFailed_correctParamsReturned() {
         // Arrange
-        val status = Status.FAILED
-        val event = Event.ContentRendering(status)
+        val status = VGSAnalyticsStatus.FAILED
+        val event = VGSAnalyticsEvent.ContentRendering(status)
 
         // Act
         val params = event.getParams()
@@ -405,7 +405,7 @@ class EventTest {
     @Test
     fun contentSharing_correctParamsReturned() {
         // Arrange
-        val event = Event.ContentSharing()
+        val event = VGSAnalyticsEvent.ContentSharing()
 
         // Act
         val params = event.getParams()

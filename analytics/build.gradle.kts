@@ -1,7 +1,8 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.cocoapods)
     alias(libs.plugins.android.library)
     alias(libs.plugins.mokkery)
 }
@@ -14,22 +15,22 @@ kotlin {
             }
         }
     }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
 
-    cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
-        version = "1.0"
-        ios.deploymentTarget = "16.0"
-        podfile = project.file("../iosApp/Podfile")
-        framework {
+    val xcf = XCFramework()
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
             baseName = "analytics"
             isStatic = true
+            xcf.add(this)
         }
     }
-    
+
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.ktor.client.core)
@@ -59,5 +60,22 @@ android {
     }
     buildFeatures {
         buildConfig = true
+    }
+}
+
+tasks.named("embedAndSignAppleFrameworkForXcode") {
+    dependsOn("assembleXCFramework")
+}
+
+tasks.named("assembleXCFramework") {
+    doLast {
+        val target = file("$rootDir/analytics/build/XCFrameworks/release/analytics.xcframework")
+        val destination = file("${rootDir.parent}/Frameworks/analytics.xcframework")
+
+        if (!target.exists()) {
+            throw GradleException("The analytics.framework does not exist. Ensure the assembleXCFramework task runs successfully.")
+        }
+
+        target.copyRecursively(destination, overwrite = true)
     }
 }

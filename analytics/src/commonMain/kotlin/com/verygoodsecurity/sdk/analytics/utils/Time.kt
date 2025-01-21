@@ -1,3 +1,3 @@
 package com.verygoodsecurity.sdk.analytics.utils
 
-expect fun currentTimeMillis(): Long
+internal expect fun currentTimeMillis(): Long
