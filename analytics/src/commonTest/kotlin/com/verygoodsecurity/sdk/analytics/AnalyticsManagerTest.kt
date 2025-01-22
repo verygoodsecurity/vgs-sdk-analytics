@@ -1,7 +1,7 @@
 package com.verygoodsecurity.sdk.analytics
 
 import com.verygoodsecurity.sdk.analytics.data.repository.AnalyticsRepository
-import com.verygoodsecurity.sdk.analytics.model.Event
+import com.verygoodsecurity.sdk.analytics.model.VGSAnalyticsEvent
 import dev.mokkery.answering.returns
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
@@ -26,13 +26,18 @@ class AnalyticsManagerTest {
 
     private val provider: FakeProvider = FakeProvider(TestScope(dispatcher), dispatcher, repository)
 
-    private val analyticsManager = AnalyticsManager(
-        vault = "testVault",
-        environment = "testEnvironment",
+    private val analyticsManager = VGSSharedAnalyticsManager(
         source = "testSource",
         sourceVersion = "testSourceVersion",
+        dependencyManager = "testDependencyManager",
         provider = provider
     )
+
+    private val vault = "testVault"
+
+    private val environment = "testEnvironment"
+
+    private val formId = "testFormId"
 
     @BeforeTest
     fun setup() {
@@ -42,10 +47,13 @@ class AnalyticsManagerTest {
     @Test
     fun capture_calledOnce() {
         // Arrange
-        val event = Event.FieldAttach(fieldType = "testFieldType", contentPath = "testContentPath")
+        val event = VGSAnalyticsEvent.FieldAttach(
+            fieldType = "testFieldType",
+            contentPath = "testContentPath"
+        )
 
         // Act
-        analyticsManager.capture(event)
+        analyticsManager.capture(vault, environment, formId, event)
 
         // Assert
         verifySuspend(exactly(1)) { repository.capture(any()) }
@@ -66,10 +74,9 @@ class AnalyticsManagerTest {
         override fun getAnalyticsRepository(): AnalyticsRepository = repository
 
         override fun getDefaultEventParams(
-            vault: String,
-            environment: String,
             source: String,
-            sourceVersion: String
+            sourceVersion: String,
+            dependencyManager: String
         ): Map<String, Any> = emptyMap()
     }
 }
