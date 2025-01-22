@@ -8,7 +8,7 @@ class MappingPolicyTest {
     @Test
     fun getAnalyticsName_nestedJson_correctReturned() {
         // Arrange
-        val policy = MappingPolicy.NESTED_JSON
+        val policy = VGSAnalyticsMappingPolicy.NESTED_JSON
 
         // Act
         val analyticsName = policy.analyticsValue
@@ -20,7 +20,7 @@ class MappingPolicyTest {
     @Test
     fun getAnalyticsName_flatJson_correctReturned() {
         // Arrange
-        val policy = MappingPolicy.FLAT_JSON
+        val policy = VGSAnalyticsMappingPolicy.FLAT_JSON
 
         // Act
         val analyticsName = policy.analyticsValue
@@ -32,7 +32,7 @@ class MappingPolicyTest {
     @Test
     fun getAnalyticsName_nestedJsonArraysMerge_correctReturned() {
         // Arrange
-        val policy = MappingPolicy.NESTED_JSON_ARRAYS_MERGE
+        val policy = VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_MERGE
 
         // Act
         val analyticsName = policy.analyticsValue
@@ -44,7 +44,7 @@ class MappingPolicyTest {
     @Test
     fun getAnalyticsName_nestedJsonArraysOverwrite_correctReturned() {
         // Arrange
-        val policy = MappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE
+        val policy = VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE
 
         // Act
         val analyticsName = policy.analyticsValue

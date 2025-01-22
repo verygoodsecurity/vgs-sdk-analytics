@@ -1,6 +1,6 @@
 package com.verygoodsecurity.sdk.analytics.model
 
-enum class Upstream {
+enum class VGSAnalyticsUpstream {
 
     TOKENIZATION,
     CUSTOM;
@@ -9,7 +9,7 @@ enum class Upstream {
 
     companion object {
 
-        fun get(isTokenization: Boolean): Upstream {
+        fun get(isTokenization: Boolean): VGSAnalyticsUpstream {
             return if (isTokenization) {
                 TOKENIZATION
             } else {

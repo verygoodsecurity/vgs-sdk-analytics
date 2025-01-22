@@ -4,8 +4,8 @@ import com.verygoodsecurity.sdk.analytics.data.repository.AnalyticsRepository
 import com.verygoodsecurity.sdk.analytics.data.repository.DefaultAnalyticsRepository
 import com.verygoodsecurity.sdk.analytics.data.repository.Mapper
 import com.verygoodsecurity.sdk.analytics.data.source.remote.DefaultAnalyticsRemoteDataSource
-import com.verygoodsecurity.sdk.analytics.model.Event
-import com.verygoodsecurity.sdk.analytics.model.Status
+import com.verygoodsecurity.sdk.analytics.model.VGSAnalyticsEvent
+import com.verygoodsecurity.sdk.analytics.model.VGSAnalyticsStatus
 import com.verygoodsecurity.sdk.analytics.utils.Session
 import com.verygoodsecurity.sdk.analytics.utils.deviceInfo
 import com.verygoodsecurity.sdk.analytics.utils.randomUUID
@@ -18,16 +18,14 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import com.verygoodsecurity.sdk.analytics.data.repository.model.Event as EventModel
 
-// TODO: Consider trackRequest/trackResponse/trackInit functions names
-class AnalyticsManager internal constructor(
-    private val vault: String,
-    private val environment: String,
+class VGSSharedAnalyticsManager internal constructor(
     private val source: String,
     private val sourceVersion: String,
+    private val dependencyManager: String,
     private val provider: Provider
 ) {
 
-    var isEnabled: Boolean = true
+    private var isEnabled: Boolean = true
 
     private val scope: CoroutineScope = provider.scope
 
@@ -36,34 +34,38 @@ class AnalyticsManager internal constructor(
     private val repository: AnalyticsRepository = provider.getAnalyticsRepository()
 
     private val defaultEventParams: Map<String, Any> = provider.getDefaultEventParams(
-        vault = vault,
-        environment = environment,
-        source = source,
-        sourceVersion = sourceVersion
+        source = source, sourceVersion = sourceVersion, dependencyManager = dependencyManager
     )
 
     constructor(
-        vault: String,
-        environment: String,
         source: String,
         sourceVersion: String,
+        dependencyManager: String,
     ) : this(
-        vault = vault,
-        environment = environment,
         source = source,
         sourceVersion = sourceVersion,
+        dependencyManager = dependencyManager,
         provider = Provider()
     )
+
+    fun getIsEnabled() = isEnabled
 
     fun setIsEnabled(isEnabled: Boolean) {
         this.isEnabled = isEnabled
     }
 
-    fun capture(event: Event) {
-        if (isEnabled) {
-            scope.launch(dispatcher) {
-                repository.capture(EventModel(params = event.getParams() + defaultEventParams))
-            }
+    fun capture(vault: String, environment: String, formId: String, event: VGSAnalyticsEvent) {
+        if (!isEnabled) return
+        val params = (event.getParams() + this@VGSSharedAnalyticsManager.defaultEventParams).toMutableMap()
+        params[EventParams.VAULT_ID] = vault
+        params[EventParams.ENVIRONMENT] = environment
+        params[EventParams.FORM_ID] = formId
+        scope.launch(dispatcher) {
+            repository.capture(
+                EventModel(
+                    params = event.getParams() + this@VGSSharedAnalyticsManager.defaultEventParams
+                )
+            )
         }
     }
 
@@ -85,26 +87,22 @@ internal open class Provider {
 
     open fun getAnalyticsRepository(): AnalyticsRepository {
         return DefaultAnalyticsRepository(
-            remoteDataSource = DefaultAnalyticsRemoteDataSource(),
-            mapper = Mapper()
+            remoteDataSource = DefaultAnalyticsRemoteDataSource(), mapper = Mapper()
         )
     }
 
     open fun getDefaultEventParams(
-        vault: String,
-        environment: String,
         source: String,
-        sourceVersion: String
+        sourceVersion: String,
+        dependencyManager: String,
     ): Map<String, Any> {
         val deviceInfo = deviceInfo()
         return mapOf(
-            EventParams.VAULT_ID to vault,
-            EventParams.ENVIRONMENT to environment,
             EventParams.SESSION_ID to Session.id,
-            EventParams.FORM_ID to randomUUID(),
             EventParams.SOURCE to source,
             EventParams.SOURCE_VERSION to sourceVersion,
-            EventParams.STATUS to Status.OK.getAnalyticsName(),
+            EventParams.DEPENDENCY_MANAGER to dependencyManager,
+            EventParams.STATUS to VGSAnalyticsStatus.OK.getAnalyticsName(),
             EventParams.UA to mapOf(
                 EventParams.DEVICE_PLATFORM to deviceInfo.platform,
                 EventParams.DEVICE_BRAND to deviceInfo.brand,

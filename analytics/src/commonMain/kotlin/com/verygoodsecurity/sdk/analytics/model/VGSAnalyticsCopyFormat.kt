@@ -1,6 +1,6 @@
 package com.verygoodsecurity.sdk.analytics.model
 
-enum class CopyFormat {
+enum class VGSAnalyticsCopyFormat {
 
     RAW,
     FORMATTED;

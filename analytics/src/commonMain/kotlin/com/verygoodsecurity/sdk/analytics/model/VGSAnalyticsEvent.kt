@@ -6,7 +6,7 @@ import com.verygoodsecurity.sdk.analytics.EventValues
 import com.verygoodsecurity.sdk.analytics.utils.currentTimeMillis
 import kotlin.jvm.JvmName
 
-sealed class Event {
+sealed class VGSAnalyticsEvent {
 
     protected abstract val type: String
 
@@ -26,7 +26,7 @@ sealed class Event {
         private val fieldType: String,
         private val contentPath: String? = null,
         private val ui: String? = null, // TODO: Use expected/actual for enum?
-    ) : Event() {
+    ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.FIELD_ATTACH
 
@@ -38,7 +38,7 @@ sealed class Event {
         }
     }
 
-    data class FieldDetach(private val fieldType: String) : Event() {
+    data class FieldDetach(private val fieldType: String) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.FIELD_DETACH
 
@@ -48,10 +48,10 @@ sealed class Event {
     }
 
     data class Cname(
-        private val status: Status,
+        private val status: VGSAnalyticsStatus,
         private val hostname: String,
         private val latency: Long? = null
-    ) : Event() {
+    ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.CNAME
 
@@ -63,12 +63,23 @@ sealed class Event {
         }
     }
 
-    class Request private constructor(
-        status: Status,
+    class Request(
+        status: VGSAnalyticsStatus,
         code: Int,
         content: List<String>,
-        upstream: Upstream,
-    ) : Event() {
+        upstream: VGSAnalyticsUpstream,
+    ) : VGSAnalyticsEvent() {
+
+        constructor(
+            status: VGSAnalyticsStatus,
+            code: Int,
+            content: List<String>,
+        ) : this(
+            status = status,
+            code = code,
+            content = content,
+            upstream = VGSAnalyticsUpstream.CUSTOM
+        )
 
         override val type: String = EventTypes.REQUEST
 
@@ -80,14 +91,14 @@ sealed class Event {
         )
 
         class Builder(
-            private val status: Status,
+            private val status: VGSAnalyticsStatus,
             private val code: Int,
-            private val upstream: Upstream = Upstream.CUSTOM
+            private val upstream: VGSAnalyticsUpstream = VGSAnalyticsUpstream.CUSTOM
         ) {
 
             private val content: MutableList<String> = mutableListOf()
 
-            fun mappingPolicy(policy: MappingPolicy) = this.also {
+            fun mappingPolicy(policy: VGSAnalyticsMappingPolicy) = this.also {
                 content.add(policy.analyticsValue)
             }
 
@@ -125,11 +136,17 @@ sealed class Event {
     }
 
     data class Response(
-        private val status: Status,
+        private val status: VGSAnalyticsStatus,
         private val code: Int,
-        private val upstream: Upstream = Upstream.CUSTOM,
-        private val errorMessage: String? = null,
-    ) : Event() {
+        private val upstream: VGSAnalyticsUpstream,
+        private val errorMessage: String?,
+    ) : VGSAnalyticsEvent() {
+
+        constructor(
+            status: VGSAnalyticsStatus,
+            code: Int,
+            errorMessage: String?,
+        ) : this(status = status, code = code, upstream = VGSAnalyticsUpstream.CUSTOM, errorMessage)
 
         override val type: String = EventTypes.RESPONSE
 
@@ -142,7 +159,7 @@ sealed class Event {
         }
     }
 
-    data class Autofill(private val fieldType: String) : Event() {
+    data class Autofill(private val fieldType: String) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.AUTOFILL
 
@@ -151,7 +168,7 @@ sealed class Event {
         )
     }
 
-    data class AttachFile(private val status: Status) : Event() {
+    data class AttachFile(private val status: VGSAnalyticsStatus) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.ATTACH_FILE
 
@@ -161,11 +178,11 @@ sealed class Event {
     }
 
     data class Scan(
-        val status: Status,
+        val status: VGSAnalyticsStatus,
         val scanId: String,
         val scanDetails: String,
         val scannerType: String,
-    ) : Event() {
+    ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.SCAN
 
@@ -179,13 +196,15 @@ sealed class Event {
 
     data class CopyToClipboard(
         val fieldType: String,
-        val format: CopyFormat
-    ) : Event() {
+        val contentPath: String,
+        val format: VGSAnalyticsCopyFormat
+    ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.COPY_TO_CLIPBOARD
 
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.FIELD_TYPE to fieldType,
+            EventParams.CONTENT_PATH to contentPath,
             EventParams.COPY_FORMAT to format.name.lowercase(),
         )
     }
@@ -193,7 +212,7 @@ sealed class Event {
     data class SecureTextRange(
         val fieldType: String,
         val contentPath: String,
-    ) : Event() {
+    ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.SET_SECURE_TEXT_RANGE
 
@@ -203,19 +222,27 @@ sealed class Event {
         )
     }
 
-    data class ContentRendering(val status: Status) : Event() {
+    data class ContentRendering(
+        val status: VGSAnalyticsStatus,
+        val fieldType: String,
+        val contentPath: String,
+    ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.CONTENT_RENDERING
 
         override val params: MutableMap<String, Any> = mutableMapOf(
-            EventParams.STATUS to status.getAnalyticsName()
+            EventParams.STATUS to status.getAnalyticsName(),
+            EventParams.FIELD_TYPE to fieldType,
+            EventParams.CONTENT_PATH to contentPath
         )
     }
 
-    class ContentSharing : Event() {
+    data class ContentSharing(val contentPath: String) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.CONTENT_SHARING
 
-        override val params: MutableMap<String, Any> = mutableMapOf()
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.CONTENT_PATH to contentPath
+        )
     }
 }

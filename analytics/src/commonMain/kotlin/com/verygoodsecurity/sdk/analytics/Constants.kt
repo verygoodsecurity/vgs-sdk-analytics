@@ -23,6 +23,7 @@ internal object EventParams {
     const val ENVIRONMENT = "env"
     const val SOURCE_VERSION = "version"
     const val SESSION_ID = "vgsSessionId"
+    const val DEPENDENCY_MANAGER = "dependencyManager"
     const val FORM_ID = "formId"
     const val SOURCE = "source"
     const val TIMESTAMP = "localTimestamp"
