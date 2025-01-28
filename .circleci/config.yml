@@ -19,7 +19,7 @@ jobs:
             echo "sdk.dir=/opt/homebrew/share/android-commandlinetools" >> local.properties
       - run:
           name: Run Tests
-          command: ./gradlew :analytics:allTests
+          command: ./gradlew :VGSClientSDKAnalytics:allTests
 
 workflows:
   main:
