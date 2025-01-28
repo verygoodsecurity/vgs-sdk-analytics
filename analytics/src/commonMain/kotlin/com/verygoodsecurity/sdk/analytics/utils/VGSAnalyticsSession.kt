@@ -1,6 +1,6 @@
 package com.verygoodsecurity.sdk.analytics.utils
 
-internal object Session {
+object VGSAnalyticsSession {
 
     val id = randomUUID()
 }
