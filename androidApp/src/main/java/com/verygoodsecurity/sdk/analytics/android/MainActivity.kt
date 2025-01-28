@@ -24,10 +24,9 @@ class MainActivity : ComponentActivity() {
 
     private val analyticsManager =
         VGSSharedAnalyticsManager(
-            vault = "<TENANT>",
-            environment = "sandbox",
             source = "analyticsAndroidDemo",
-            sourceVersion = "1.0.0"
+            sourceVersion = "1.0.0",
+            dependencyManager = "androidDependencyManagerDemo"
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +37,9 @@ class MainActivity : ComponentActivity() {
                     title = "",
                     onButtonClick = {
                         analyticsManager.capture(
+                            vault = "<TENANT>",
+                            environment = "sandbox",
+                            formId = "androidDemoFormId",
                             VGSAnalyticsEvent.FieldAttach(
                                 fieldType = "test",
                                 contentPath = "test"

@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.analytics)
+    implementation(projects.vgsClientSDKAnalytics)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
