@@ -6,9 +6,8 @@ import com.verygoodsecurity.sdk.analytics.data.repository.Mapper
 import com.verygoodsecurity.sdk.analytics.data.source.remote.DefaultAnalyticsRemoteDataSource
 import com.verygoodsecurity.sdk.analytics.model.VGSAnalyticsEvent
 import com.verygoodsecurity.sdk.analytics.model.VGSAnalyticsStatus
-import com.verygoodsecurity.sdk.analytics.utils.Session
+import com.verygoodsecurity.sdk.analytics.utils.VGSAnalyticsSession
 import com.verygoodsecurity.sdk.analytics.utils.deviceInfo
-import com.verygoodsecurity.sdk.analytics.utils.randomUUID
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,7 +97,7 @@ internal open class Provider {
     ): Map<String, Any> {
         val deviceInfo = deviceInfo()
         return mapOf(
-            EventParams.SESSION_ID to Session.id,
+            EventParams.SESSION_ID to VGSAnalyticsSession.id,
             EventParams.SOURCE to source,
             EventParams.SOURCE_VERSION to sourceVersion,
             EventParams.DEPENDENCY_MANAGER to dependencyManager,
