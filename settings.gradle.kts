@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "vgs-sdk-analytics"
 include(":androidApp")
-include(":analytics")
+include(":VGSClientSDKAnalytics") // We use this module name patter to achieve correct framework name for iOS

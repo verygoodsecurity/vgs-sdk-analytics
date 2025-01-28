@@ -23,8 +23,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "analytics"
-            isStatic = true
+            baseName = "VGSClientSDKAnalytics"
             xcf.add(this)
         }
     }
@@ -43,7 +42,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+            implementation(libs.kotlin.coroutines.test)
         }
     }
 }
@@ -69,11 +68,11 @@ tasks.named("embedAndSignAppleFrameworkForXcode") {
 
 tasks.named("assembleXCFramework") {
     doLast {
-        val target = file("$rootDir/analytics/build/XCFrameworks/release/analytics.xcframework")
-        val destination = file("${rootDir.parent}/Frameworks/analytics.xcframework")
+        val target = file("$rootDir/VGSClientSDKAnalytics/build/XCFrameworks/release/VGSClientSDKAnalytics.xcframework")
+        val destination = file("${rootDir.parent}/Frameworks/VGSClientSDKAnalytics.xcframework")
 
         if (!target.exists()) {
-            throw GradleException("The analytics.framework does not exist. Ensure the assembleXCFramework task runs successfully.")
+            throw GradleException("The VGSClientSDKAnalytics.framework does not exist. Ensure the assembleXCFramework task runs successfully.")
         }
 
         target.copyRecursively(destination, overwrite = true)
