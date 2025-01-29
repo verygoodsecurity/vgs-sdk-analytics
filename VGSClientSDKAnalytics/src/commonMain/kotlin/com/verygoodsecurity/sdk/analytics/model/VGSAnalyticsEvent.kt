@@ -75,10 +75,7 @@ sealed class VGSAnalyticsEvent {
             code: Int,
             content: List<String>,
         ) : this(
-            status = status,
-            code = code,
-            content = content,
-            upstream = VGSAnalyticsUpstream.CUSTOM
+            status = status, code = code, content = content, upstream = VGSAnalyticsUpstream.CUSTOM
         )
 
         override val type: String = EventTypes.REQUEST
@@ -127,10 +124,7 @@ sealed class VGSAnalyticsEvent {
             }
 
             fun build() = Request(
-                status = status,
-                code = code,
-                upstream = upstream,
-                content = content
+                status = status, code = code, upstream = upstream, content = content
             )
         }
     }
@@ -179,25 +173,49 @@ sealed class VGSAnalyticsEvent {
 
     data class Scan(
         val status: VGSAnalyticsStatus,
-        val scanId: String,
-        val scanDetails: String,
-        val scannerType: String,
+        val scannerType: VGSAnalyticsScannerType,
+        val scanId: String? = null,
+        val scanDetails: String? = null,
+        val errorCode: Int? = null
     ) : VGSAnalyticsEvent() {
+
+        constructor(
+            status: VGSAnalyticsStatus,
+            scannerType: VGSAnalyticsScannerType,
+        ) : this(
+            status = status,
+            scannerType = scannerType,
+            scanId = null,
+            scanDetails = null,
+            errorCode = null
+        )
+
+        constructor(
+            status: VGSAnalyticsStatus,
+            scannerType: VGSAnalyticsScannerType,
+            errorCode: Int
+        ) : this(
+            status = status,
+            scannerType = scannerType,
+            scanId = null,
+            scanDetails = null,
+            errorCode = errorCode
+        )
 
         override val type: String = EventTypes.SCAN
 
-        override val params: MutableMap<String, Any> = mutableMapOf(
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.STATUS to status.getAnalyticsName(),
-            EventParams.SCAN_ID to scanId,
-            EventParams.SCAN_DETAILS to scanDetails,
-            EventParams.SCANNER_TYPE to scannerType,
-        )
+            EventParams.SCANNER_TYPE to scannerType.analyticsValue,
+        ).apply {
+            scanId?.let { put(EventParams.SCAN_ID, it) }
+            scanDetails?.let { put(EventParams.SCAN_DETAILS, scanDetails) }
+            errorCode?.let { put(EventParams.ERROR_CODE, it) }
+        }
     }
 
     data class CopyToClipboard(
-        val fieldType: String,
-        val contentPath: String,
-        val format: VGSAnalyticsCopyFormat
+        val fieldType: String, val contentPath: String, val format: VGSAnalyticsCopyFormat
     ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.COPY_TO_CLIPBOARD
