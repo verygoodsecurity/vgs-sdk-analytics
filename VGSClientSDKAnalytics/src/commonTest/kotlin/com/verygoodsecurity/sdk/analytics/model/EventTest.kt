@@ -284,11 +284,12 @@ class EventTest {
     fun scan_statusOk_correctParamsReturned() {
         // Arrange
         val status = VGSAnalyticsStatus.OK
+        val scannerType = VGSAnalyticsScannerType.BLINK_CARD
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
-        val scannerType = "testScannerType"
+        val errorCode = -1
 
-        val event = VGSAnalyticsEvent.Scan(status, scanId, scanDetails, scannerType)
+        val event = VGSAnalyticsEvent.Scan(status, scannerType, scanId, scanDetails, errorCode)
 
         // Act
         val params = event.getParams()
@@ -296,20 +297,22 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SCAN)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+        assertEquals(params[EventParams.SCANNER_TYPE], scannerType.analyticsValue)
         assertEquals(params[EventParams.SCAN_ID], scanId)
         assertEquals(params[EventParams.SCAN_DETAILS], scanDetails)
-        assertEquals(params[EventParams.SCANNER_TYPE], scannerType)
+        assertEquals(params[EventParams.ERROR_CODE], errorCode)
     }
 
     @Test
     fun scan_statusFailed_correctParamsReturned() {
         // Arrange
         val status = VGSAnalyticsStatus.FAILED
+        val scannerType = VGSAnalyticsScannerType.CARD_IO
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
-        val scannerType = "testScannerType"
+        val errorCode = -1
 
-        val event = VGSAnalyticsEvent.Scan(status, scanId, scanDetails, scannerType)
+        val event = VGSAnalyticsEvent.Scan(status, scannerType, scanId, scanDetails, errorCode)
 
         // Act
         val params = event.getParams()
@@ -317,20 +320,22 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SCAN)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+        assertEquals(params[EventParams.SCANNER_TYPE], scannerType.analyticsValue)
         assertEquals(params[EventParams.SCAN_ID], scanId)
         assertEquals(params[EventParams.SCAN_DETAILS], scanDetails)
-        assertEquals(params[EventParams.SCANNER_TYPE], scannerType)
+        assertEquals(params[EventParams.ERROR_CODE], errorCode)
     }
 
     @Test
     fun scan_statusCancel_correctParamsReturned() {
         // Arrange
         val status = VGSAnalyticsStatus.CANCELED
+        val scannerType = VGSAnalyticsScannerType.BLINK_CARD
         val scanId = "testScanId"
         val scanDetails = "testScanDetails"
-        val scannerType = "testScannerType"
+        val errorCode = -1
 
-        val event = VGSAnalyticsEvent.Scan(status, scanId, scanDetails, scannerType)
+        val event = VGSAnalyticsEvent.Scan(status, scannerType, scanId, scanDetails, errorCode)
 
         // Act
         val params = event.getParams()
@@ -338,9 +343,10 @@ class EventTest {
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SCAN)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
+        assertEquals(params[EventParams.SCANNER_TYPE], scannerType.analyticsValue)
         assertEquals(params[EventParams.SCAN_ID], scanId)
         assertEquals(params[EventParams.SCAN_DETAILS], scanDetails)
-        assertEquals(params[EventParams.SCANNER_TYPE], scannerType)
+        assertEquals(params[EventParams.ERROR_CODE], errorCode)
     }
 
     @Test
