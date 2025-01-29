@@ -44,6 +44,7 @@ internal object EventParams {
     const val UPSTREAM = "upstream"
     const val CONTENT = "content"
     const val ERROR = "error"
+    const val ERROR_CODE = "errorCode"
     const val COPY_FORMAT = "copyFormat"
     const val LATENCY = "latency"
 }
