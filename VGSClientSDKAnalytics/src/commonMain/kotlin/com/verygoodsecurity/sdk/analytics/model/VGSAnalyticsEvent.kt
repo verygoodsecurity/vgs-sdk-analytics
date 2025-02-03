@@ -25,7 +25,7 @@ sealed class VGSAnalyticsEvent {
     data class FieldAttach(
         private val fieldType: String,
         private val contentPath: String? = null,
-        private val ui: String? = null, // TODO: Use expected/actual for enum?
+        private val ui: String? = null,
     ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.FIELD_ATTACH
