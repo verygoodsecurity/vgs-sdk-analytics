@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -30,15 +31,30 @@ kotlin {
 
     applyDefaultHierarchyTemplate()
 
+    js(IR) {
+        moduleName = "VGSClientSDKAnalytics"
+        browser {
+            webpackTask {
+                outputFileName = "VGSClientSDKAnalytics.js"
+                output.libraryTarget = "commonjs2"
+            }
+        }
+        binaries.executable()
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.ktor.client.core)
+            implementation(libs.kotlin.coroutines.core)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+        }
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -68,7 +84,8 @@ tasks.named("embedAndSignAppleFrameworkForXcode") {
 
 tasks.named("assembleXCFramework") {
     doLast {
-        val target = file("$rootDir/VGSClientSDKAnalytics/build/XCFrameworks/release/VGSClientSDKAnalytics.xcframework")
+        val target =
+            file("$rootDir/VGSClientSDKAnalytics/build/XCFrameworks/release/VGSClientSDKAnalytics.xcframework")
         val destination = file("${rootDir.parent}/Frameworks/VGSClientSDKAnalytics.xcframework")
 
         if (!target.exists()) {

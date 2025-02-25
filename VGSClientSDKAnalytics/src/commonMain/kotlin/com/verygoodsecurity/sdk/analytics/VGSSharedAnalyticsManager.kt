@@ -11,7 +11,6 @@ import com.verygoodsecurity.sdk.analytics.utils.deviceInfo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -82,7 +81,7 @@ internal open class Provider {
         get() = CoroutineScope(context = Job() + Dispatchers.Main)
 
     open val dispatcher: CoroutineDispatcher
-        get() = Dispatchers.IO
+        get() = Dispatchers.Default
 
     open fun getAnalyticsRepository(): AnalyticsRepository {
         return DefaultAnalyticsRepository(
