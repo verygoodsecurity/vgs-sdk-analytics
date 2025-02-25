@@ -35,7 +35,7 @@ kotlin {
         moduleName = "VGSClientSDKAnalytics"
         browser {
             webpackTask {
-                outputFileName = "VGSClientSDKAnalytics.js"
+                mainOutputFileName = "VGSClientSDKAnalytics.js"
                 output.libraryTarget = "commonjs2"
             }
         }
@@ -90,6 +90,25 @@ tasks.named("assembleXCFramework") {
 
         if (!target.exists()) {
             throw GradleException("The VGSClientSDKAnalytics.framework does not exist. Ensure the assembleXCFramework task runs successfully.")
+        }
+
+        target.copyRecursively(destination, overwrite = true)
+    }
+}
+
+tasks.register("assembleJsBundle") {
+    dependsOn("jsBrowserProductionWebpack")
+    doLast {
+        val target =
+            file("$rootDir/VGSClientSDKAnalytics/build/kotlin-webpack/js/productionExecutable/VGSClientSDKAnalytics.js")
+
+        val destination = file("${rootDir.parent}/analytics/VGSClientSDKAnalytics.js")
+
+        println(target)
+        println(destination)
+
+        if (!target.exists()) {
+            throw GradleException("The VGSClientSDKAnalytics.js does not exist. Ensure the assembleJsBundle task runs successfully.")
         }
 
         target.copyRecursively(destination, overwrite = true)
