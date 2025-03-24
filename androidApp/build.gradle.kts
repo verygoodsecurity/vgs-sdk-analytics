@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.verygoodsecurity.sdk.analytics.android"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "com.verygoodsecurity.sdk.analytics.android"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
