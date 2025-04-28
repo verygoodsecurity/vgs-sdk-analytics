@@ -2,6 +2,7 @@ package com.verygoodsecurity.sdk.analytics.data.source.remote
 
 import com.verygoodsecurity.sdk.analytics.data.source.remote.client.httpClient
 import com.verygoodsecurity.sdk.analytics.data.source.remote.dto.Event
+import com.verygoodsecurity.sdk.analytics.utils.Logger
 import com.verygoodsecurity.sdk.analytics.utils.toBase64Json
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
@@ -31,8 +32,12 @@ internal class DefaultAnalyticsRemoteDataSource : AnalyticsRemoteDataSource {
 
     override suspend fun capture(event: Event) {
         val body = event.params.toBase64Json()
-        client.post {
-            setBody(body)
+        try {
+            client.post {
+                setBody(body)
+            }
+        } catch (t: Throwable) {
+            Logger.e(message = "Analytics request filed with exception.", throwable = t)
         }
     }
 }
