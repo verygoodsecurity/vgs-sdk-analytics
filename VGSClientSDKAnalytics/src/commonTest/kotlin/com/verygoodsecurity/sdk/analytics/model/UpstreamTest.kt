@@ -6,30 +6,6 @@ import kotlin.test.assertEquals
 class UpstreamTest {
 
     @Test
-    fun get_true_tokenizationReturned() {
-        // Arrange
-        val isTokenization = true
-
-        // Act
-        val upstream = VGSAnalyticsUpstream.get(isTokenization)
-
-        // Assert
-        assertEquals(VGSAnalyticsUpstream.TOKENIZATION, upstream)
-    }
-
-    @Test
-    fun get_false_customReturned() {
-        // Arrange
-        val isTokenization = false
-
-        // Act
-        val upstream = VGSAnalyticsUpstream.get(isTokenization)
-
-        // Assert
-        assertEquals(VGSAnalyticsUpstream.CUSTOM, upstream)
-    }
-
-    @Test
     fun getAnalyticsName_upstreamTokenization_correctReturned() {
         // Arrange
         val upstream = VGSAnalyticsUpstream.TOKENIZATION
@@ -51,5 +27,17 @@ class UpstreamTest {
 
         // Assert
         assertEquals("custom", analyticsName)
+    }
+
+    @Test
+    fun getAnalyticsName_upstreamCmp_correctReturned() {
+        // Arrange
+        val upstream = VGSAnalyticsUpstream.CMP
+
+        // Act
+        val analyticsName = upstream.getAnalyticsName()
+
+        // Assert
+        assertEquals("cmp", analyticsName)
     }
 }
