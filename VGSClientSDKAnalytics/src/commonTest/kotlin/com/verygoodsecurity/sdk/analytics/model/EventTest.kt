@@ -78,7 +78,7 @@ class EventTest {
         // Arrange
         val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = VGSAnalyticsUpstream.get(false)
+        val upstream = VGSAnalyticsUpstream.CUSTOM
 
         val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
             .customHostname()
@@ -111,7 +111,7 @@ class EventTest {
         // Arrange
         val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = VGSAnalyticsUpstream.get(false)
+        val upstream = VGSAnalyticsUpstream.CUSTOM
 
         val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
             .mappingPolicy(VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_MERGE)
@@ -134,7 +134,7 @@ class EventTest {
         // Arrange
         val status = VGSAnalyticsStatus.OK
         val code = 200
-        val upstream = VGSAnalyticsUpstream.get(false)
+        val upstream = VGSAnalyticsUpstream.CUSTOM
 
         val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
             .mappingPolicy(VGSAnalyticsMappingPolicy.NESTED_JSON_ARRAYS_OVERWRITE)
@@ -157,7 +157,7 @@ class EventTest {
         // Arrange
         val status = VGSAnalyticsStatus.FAILED
         val code = 500
-        val upstream = VGSAnalyticsUpstream.get(false)
+        val upstream = VGSAnalyticsUpstream.CUSTOM
 
         val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream)
             .mappingPolicy(VGSAnalyticsMappingPolicy.FLAT_JSON)
@@ -180,7 +180,7 @@ class EventTest {
         // Arrange
         val status = VGSAnalyticsStatus.FAILED
         val code = 500
-        val upstream = VGSAnalyticsUpstream.get(true)
+        val upstream = VGSAnalyticsUpstream.TOKENIZATION
 
         val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream).build()
 
@@ -201,8 +201,9 @@ class EventTest {
         // Arrange
         val status = VGSAnalyticsStatus.OK
         val code = 200
+        val upstream = VGSAnalyticsUpstream.TOKENIZATION
 
-        val event = VGSAnalyticsEvent.Response(status, code, errorMessage = null)
+        val event = VGSAnalyticsEvent.Response(status, code, upstream, errorMessage = null)
 
         // Act
         val params = event.getParams()
@@ -211,6 +212,7 @@ class EventTest {
         assertEquals(params[EventParams.TYPE], EventTypes.RESPONSE)
         assertEquals(params[EventParams.STATUS], status.getAnalyticsName())
         assertEquals(params[EventParams.CODE], code)
+        assertEquals(params[EventParams.UPSTREAM], upstream.getAnalyticsName())
         assertFalse(params.contains(EventParams.ERROR))
     }
 
