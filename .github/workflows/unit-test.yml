@@ -1,0 +1,64 @@
+---
+name: Unit Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write  # For publishing test results
+
+jobs:
+  run-unit-test:
+    runs-on: macos-14  # macOS M1 runner
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      # - name: Accept Android SDK licenses
+      #   run: yes | sdkmanager --licenses || true
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      #
+      # - name: Make gradlew executable
+      #   run: chmod +x ./gradlew
+
+      - name: Run Tests
+        run: ./gradlew :VGSClientSDKAnalytics:allTests --continue --stacktrace
+
+      # - name: Upload Test Results
+      #   uses: actions/upload-artifact@v4
+      #   if: always()  # Upload even if tests fail
+      #   with:
+      #     name: test-results
+      #     path: |
+      #       **/build/test-results/**/*.xml
+      #       **/build/reports/**
+      #     retention-days: 30
+      #
+      # - name: Publish Test Report
+      #   uses: mikepenz/action-junit-report@v4
+      #   if: always()
+      #   with:
+      #     report_paths: '**/build/test-results/**/TEST-*.xml'
+      #     check_name: 'Unit Test Results'
+      #     fail_on_failure: true
+
