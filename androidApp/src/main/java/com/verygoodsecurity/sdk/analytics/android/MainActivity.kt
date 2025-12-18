@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                             vault = "<TENANT>",
                             environment = "sandbox",
                             formId = "androidDemoFormId",
-                            VGSAnalyticsEvent.FieldAttach(
+                            event = VGSAnalyticsEvent.FieldAttach(
                                 fieldType = "test",
                                 contentPath = "test"
                             )
