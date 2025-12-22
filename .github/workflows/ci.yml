@@ -1,5 +1,5 @@
 ---
-name: Unit Tests
+name: CI
 
 on:
   pull_request:
@@ -36,6 +36,9 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Run Tests
         run: ./gradlew :VGSClientSDKAnalytics:allTests --continue --stacktrace
