@@ -2,9 +2,14 @@
 name: Unit Tests
 
 on:
-  push:
   pull_request:
-  workflow_dispatch:
+    branches:
+      - '**'
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
