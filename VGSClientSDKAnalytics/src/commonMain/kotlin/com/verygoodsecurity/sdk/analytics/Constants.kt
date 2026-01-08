@@ -2,7 +2,7 @@ package com.verygoodsecurity.sdk.analytics
 
 internal object EventTypes {
 
-    const val COLLECT_INSTANCE_CREATE = "Create"
+    const val CREATE = "Create"
     const val FIELD_ATTACH = "Init"
     const val FIELD_DETACH = "UnsubscribeField"
     const val CNAME = "HostNameValidation"
