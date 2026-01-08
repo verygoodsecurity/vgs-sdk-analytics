@@ -22,9 +22,9 @@ sealed class VGSAnalyticsEvent {
         }
     }
 
-    data object CollectInstanceCreate: VGSAnalyticsEvent() {
+    data object Create: VGSAnalyticsEvent() {
 
-        override val type: String = EventTypes.COLLECT_INSTANCE_CREATE
+        override val type: String = EventTypes.CREATE
 
         override val params: MutableMap<String, Any> = mutableMapOf()
     }
