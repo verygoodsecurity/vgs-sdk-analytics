@@ -1,10 +1,15 @@
 ---
-name: Unit Tests
+name: 'CI: Tests'
 
 on:
-  push:
   pull_request:
-  workflow_dispatch:
+    branches:
+      - '**'
+  push:
+    branches:
+      - 'main'
+    tags:
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,8 +20,9 @@ permissions:
   checks: write  # For publishing test results
 
 jobs:
-  run-unit-test:
-    runs-on: macos-14  # macOS M1 runner
+  run-unit-tests:
+    name: 'Run Unit Tests'
+    runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
@@ -42,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: test-results
+          name: unit-test-results
           path: |
             **/build/test-results/**/*.xml
             **/build/reports/**

@@ -22,6 +22,13 @@ sealed class VGSAnalyticsEvent {
         }
     }
 
+    data object Create: VGSAnalyticsEvent() {
+
+        override val type: String = EventTypes.CREATE
+
+        override val params: MutableMap<String, Any> = mutableMapOf()
+    }
+
     data class FieldAttach(
         private val fieldType: String,
         private val contentPath: String? = null,

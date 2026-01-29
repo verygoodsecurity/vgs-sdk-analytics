@@ -31,8 +31,8 @@ internal class DefaultAnalyticsRemoteDataSource : AnalyticsRemoteDataSource {
     }
 
     override suspend fun capture(event: Event) {
-        val body = event.params.toBase64Json()
         try {
+            val body = event.params.toBase64Json()
             client.post {
                 setBody(body)
             }
