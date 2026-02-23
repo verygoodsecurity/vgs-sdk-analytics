@@ -1,23 +1,19 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.gradle.internal.impldep.com.amazonaws.PredefinedClientConfigurations.defaultConfig
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.mokkery)
 }
 
 kotlin {
-    androidTarget {
-        tasks.withType<KotlinJvmCompile>().configureEach {
-            compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_1_8)
-            }
-        }
-        publishLibraryVariants("release")
+    android {
+        namespace = "com.verygoodsecurity.sdk.analytics"
+        minSdk {  version = release(21) }
+        compileSdk { version = release(36) }
     }
 
     val xcf = XCFramework()
@@ -51,28 +47,14 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.verygoodsecurity.sdk.analytics"
-    compileSdk = 36
-    defaultConfig {
-        minSdk = 21
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    buildFeatures {
-        buildConfig = true
-    }
-}
-
 tasks.named("embedAndSignAppleFrameworkForXcode") {
     dependsOn("assembleXCFramework")
 }
 
 tasks.named("assembleXCFramework") {
     doLast {
-        val target = file("$rootDir/VGSClientSDKAnalytics/build/XCFrameworks/release/VGSClientSDKAnalytics.xcframework")
+        val target =
+            file("$rootDir/VGSClientSDKAnalytics/build/XCFrameworks/release/VGSClientSDKAnalytics.xcframework")
         val destination = file("${rootDir.parent}/Frameworks/VGSClientSDKAnalytics.xcframework")
 
         if (!target.exists()) {
