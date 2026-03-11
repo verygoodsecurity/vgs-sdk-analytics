@@ -22,11 +22,43 @@ sealed class VGSAnalyticsEvent {
         }
     }
 
-    data object Create: VGSAnalyticsEvent() {
+    class Init private constructor(
+        val createFromType: String,
+        val configFileName: String?,
+        val configFileStatusCode: Int?,
+        val configFileLatency: Long?,
+    ) : VGSAnalyticsEvent() {
 
-        override val type: String = EventTypes.CREATE
+        override val type: String = EventTypes.INIT
 
-        override val params: MutableMap<String, Any> = mutableMapOf()
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
+            EventParams.FORM_CREATE_TYPE to createFromType
+        ).apply {
+            configFileName?.let { put(EventParams.CONFIG_FILE_NAME, it) }
+            configFileStatusCode?.let { put(EventParams.CONFIG_FILE_STATUS_CODE, it) }
+            configFileLatency?.let { put(EventParams.CONFIG_FILE_LATENCY, it) }
+        }
+
+        companion object {
+
+            fun create() = Init(
+                createFromType = EventValues.CREATE_FORM_TYPE_CREATE,
+                configFileName = null,
+                configFileStatusCode = null,
+                configFileLatency = null
+            )
+
+            fun session(
+                configFileName: String,
+                configFileStatusCode: Int,
+                configFileLatency: Long
+            ) = Init(
+                createFromType = EventValues.CREATE_FORM_TYPE_SESSION,
+                configFileName = configFileName,
+                configFileStatusCode = configFileStatusCode,
+                configFileLatency = configFileLatency
+            )
+        }
     }
 
     data class FieldAttach(
@@ -268,6 +300,21 @@ sealed class VGSAnalyticsEvent {
 
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.CONTENT_PATH to contentPath
+        )
+    }
+
+    data class CardLookup(
+        val status: VGSAnalyticsStatus,
+        val code: Int,
+        val latency: Long
+    ) : VGSAnalyticsEvent() {
+
+        override val type: String = EventTypes.CARD_LOOKUP
+
+        override val params: MutableMap<String, Any> = mutableMapOf(
+            EventParams.STATUS to status.getAnalyticsName(),
+            EventParams.CODE to code,
+            EventParams.LATENCY to latency
         )
     }
 }
