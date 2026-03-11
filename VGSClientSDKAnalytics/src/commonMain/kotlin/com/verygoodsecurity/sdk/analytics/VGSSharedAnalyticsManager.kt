@@ -33,7 +33,9 @@ class VGSSharedAnalyticsManager internal constructor(
     private val repository: AnalyticsRepository = provider.getAnalyticsRepository()
 
     private val defaultEventParams: Map<String, Any> = provider.getDefaultEventParams(
-        source = source, sourceVersion = sourceVersion, dependencyManager = dependencyManager
+        source = source,
+        sourceVersion = sourceVersion,
+        dependencyManager = dependencyManager
     )
 
     constructor(
