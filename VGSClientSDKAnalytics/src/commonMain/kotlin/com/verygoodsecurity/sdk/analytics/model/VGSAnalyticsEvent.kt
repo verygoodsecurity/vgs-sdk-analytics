@@ -306,15 +306,18 @@ sealed class VGSAnalyticsEvent {
     data class CardLookup(
         val status: VGSAnalyticsStatus,
         val code: Int,
-        val latency: Long
+        val latency: Long,
+        val error: String? = null
     ) : VGSAnalyticsEvent() {
 
         override val type: String = EventTypes.CARD_LOOKUP
 
-        override val params: MutableMap<String, Any> = mutableMapOf(
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.STATUS to status.getAnalyticsName(),
             EventParams.CODE to code,
             EventParams.LATENCY to latency
-        )
+        ).apply {
+            error?.let { put(EventParams.ERROR, it) }
+        }
     }
 }
