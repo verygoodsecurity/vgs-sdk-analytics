@@ -12,18 +12,6 @@ import kotlin.test.assertTrue
 class EventTest {
 
     @Test
-    fun create_correctParamsReturned() {
-        // Arrange
-        val event = VGSAnalyticsEvent.Create
-
-        // Act
-        val params = event.getParams()
-
-        // Assert
-        assertEquals(params[EventParams.TYPE], EventTypes.CREATE)
-    }
-
-    @Test
     fun fieldAttach_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"

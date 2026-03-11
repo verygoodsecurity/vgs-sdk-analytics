@@ -2,7 +2,7 @@ package com.verygoodsecurity.sdk.analytics
 
 internal object EventTypes {
 
-    const val CREATE = "Create"
+    const val INIT = "CollectInit"
     const val FIELD_ATTACH = "Init"
     const val FIELD_DETACH = "UnsubscribeField"
     const val CNAME = "HostNameValidation"
@@ -15,6 +15,7 @@ internal object EventTypes {
     const val SET_SECURE_TEXT_RANGE = "SetSecureTextRange"
     const val CONTENT_RENDERING = "ContentRendering"
     const val CONTENT_SHARING = "ContentSharing"
+    const val CARD_LOOKUP = "CardLookup"
 }
 
 internal object EventParams {
@@ -26,6 +27,7 @@ internal object EventParams {
     const val SESSION_ID = "vgsSessionId"
     const val DEPENDENCY_MANAGER = "dependencyManager"
     const val FORM_ID = "formId"
+    const val FORM_CREATE_TYPE = "formType"
     const val SOURCE = "source"
     const val TIMESTAMP = "localTimestamp"
     const val STATUS = "status"
@@ -48,6 +50,9 @@ internal object EventParams {
     const val ERROR_CODE = "errorCode"
     const val COPY_FORMAT = "copyFormat"
     const val LATENCY = "latency"
+    const val CONFIG_FILE_NAME = "configFile"
+    const val CONFIG_FILE_STATUS_CODE = "configFileStatusCode"
+    const val CONFIG_FILE_LATENCY = "configFileLatency"
 }
 
 internal object EventValues {
@@ -58,4 +63,6 @@ internal object EventValues {
     const val FILES = "file"
     const val FIELDS = "textField"
     const val PDF = "pdf"
+    const val CREATE_FORM_TYPE_SESSION = "session"
+    const val CREATE_FORM_TYPE_CREATE = "create"
 }
