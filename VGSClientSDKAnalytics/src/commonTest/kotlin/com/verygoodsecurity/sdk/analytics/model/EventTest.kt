@@ -12,6 +12,32 @@ import kotlin.test.assertTrue
 class EventTest {
 
     @Test
+    fun init_formType_create() {
+        // Arrange
+        val event = VGSAnalyticsEvent.Init.create()
+
+        // Act
+        val params = event.getEventParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.INIT)
+        assertEquals(params[EventParams.FORM_CREATE_TYPE], EventValues.CREATE_FORM_TYPE_CREATE)
+    }
+
+    @Test
+    fun init_formType_session() {
+        // Arrange
+        val event = VGSAnalyticsEvent.Init.session(null, null, null)
+
+        // Act
+        val params = event.getEventParams()
+
+        // Assert
+        assertEquals(params[EventParams.TYPE], EventTypes.INIT)
+        assertEquals(params[EventParams.FORM_CREATE_TYPE], EventValues.CREATE_FORM_TYPE_SESSION)
+    }
+
+    @Test
     fun fieldAttach_correctParamsReturned() {
         // Arrange
         val fieldType = "testType"
@@ -19,7 +45,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.FieldAttach(fieldType, contentPath)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.FIELD_ATTACH)
@@ -34,7 +60,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.FieldDetach(fieldType)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.FIELD_DETACH)
@@ -49,7 +75,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Cname(status, hostname)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CNAME)
@@ -65,7 +91,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Cname(status, hostname)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CNAME)
@@ -86,11 +112,14 @@ class EventTest {
             .customData()
             .fields()
             .files()
+            .pdf()
+            .cardCreate()
+            .cardUpdate()
             .mappingPolicy(VGSAnalyticsMappingPolicy.NESTED_JSON)
             .build()
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
         val content = params[EventParams.CONTENT] as List<*>
 
         // Assert
@@ -103,6 +132,9 @@ class EventTest {
         assertTrue(content.contains(EventValues.CUSTOM_DATA))
         assertTrue(content.contains(EventValues.FIELDS))
         assertTrue(content.contains(EventValues.FILES))
+        assertTrue(content.contains(EventValues.PDF))
+        assertTrue(content.contains(EventValues.CARD_CREATE))
+        assertTrue(content.contains(EventValues.CARD_UPDATE))
         assertTrue(content.contains(VGSAnalyticsMappingPolicy.NESTED_JSON.analyticsValue))
     }
 
@@ -118,7 +150,7 @@ class EventTest {
             .build()
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
         val content = params[EventParams.CONTENT] as List<*>
 
         // Assert
@@ -141,7 +173,7 @@ class EventTest {
             .build()
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
         val content = params[EventParams.CONTENT] as List<*>
 
         // Assert
@@ -164,7 +196,7 @@ class EventTest {
             .build()
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
         val content = params[EventParams.CONTENT] as List<*>
 
         // Assert
@@ -185,7 +217,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Request.Builder(status, code, upstream).build()
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
         val content = params[EventParams.CONTENT] as List<*>
 
         // Assert
@@ -206,7 +238,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Response(status, code, upstream, errorMessage = null)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.RESPONSE)
@@ -227,7 +259,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Response(status, code, upstream, errorMessage)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.RESPONSE)
@@ -245,7 +277,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Autofill(fieldType)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.AUTOFILL)
@@ -260,7 +292,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.AttachFile(status)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.ATTACH_FILE)
@@ -275,7 +307,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.AttachFile(status)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.ATTACH_FILE)
@@ -294,7 +326,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Scan(status, scannerType, scanId, scanDetails, errorCode)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SCAN)
@@ -317,7 +349,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Scan(status, scannerType, scanId, scanDetails, errorCode)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SCAN)
@@ -340,7 +372,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.Scan(status, scannerType, scanId, scanDetails, errorCode)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SCAN)
@@ -360,7 +392,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.CopyToClipboard(fieldType, contentPath, format)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.COPY_TO_CLIPBOARD)
@@ -377,7 +409,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.SecureTextRange(fieldType, contentPath)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.SET_SECURE_TEXT_RANGE)
@@ -394,7 +426,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.ContentRendering(status, fieldType, contentPath)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
@@ -412,7 +444,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.ContentRendering(status, fieldType, contentPath)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_RENDERING)
@@ -428,7 +460,7 @@ class EventTest {
         val event = VGSAnalyticsEvent.ContentSharing(contentPath)
 
         // Act
-        val params = event.getParams()
+        val params = event.getEventParams()
 
         // Assert
         assertEquals(params[EventParams.TYPE], EventTypes.CONTENT_SHARING)

@@ -4,7 +4,6 @@ import com.verygoodsecurity.sdk.analytics.EventParams
 import com.verygoodsecurity.sdk.analytics.EventTypes
 import com.verygoodsecurity.sdk.analytics.EventValues
 import com.verygoodsecurity.sdk.analytics.utils.currentTimeMillis
-import kotlin.jvm.JvmName
 
 sealed class VGSAnalyticsEvent {
 
@@ -14,8 +13,7 @@ sealed class VGSAnalyticsEvent {
 
     private val timestamp: Long = currentTimeMillis()
 
-    @JvmName("getEventParams")
-    fun getParams(): Map<String, Any> {
+    fun getEventParams(): Map<String, Any> {
         return params.also {
             it[EventParams.TYPE] = type
             it[EventParams.TIMESTAMP] = timestamp
@@ -160,6 +158,14 @@ sealed class VGSAnalyticsEvent {
 
             fun pdf() = this.also {
                 content.add(EventValues.PDF)
+            }
+
+            fun cardCreate() = this.also {
+                content.add(EventValues.CARD_CREATE)
+            }
+
+            fun cardUpdate() = this.also {
+                content.add(EventValues.CARD_UPDATE)
             }
 
             fun build() = Request(
