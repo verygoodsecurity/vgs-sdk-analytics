@@ -49,9 +49,9 @@ sealed class VGSAnalyticsEvent {
             )
 
             fun session(
-                configFileName: String,
-                configFileStatusCode: Int,
-                configFileLatency: Long
+                configFileName: String?,
+                configFileStatusCode: Int?,
+                configFileLatency: Long?
             ) = Init(
                 createFromType = EventValues.CREATE_FORM_TYPE_SESSION,
                 configFileName = configFileName,
