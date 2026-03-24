@@ -32,9 +32,9 @@ sealed class VGSAnalyticsEvent {
         override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
             EventParams.FORM_CREATE_TYPE to createFromType
         ).apply {
-            configFileName?.let { put(EventParams.CONFIG_FILE_NAME, it) }
-            configFileStatusCode?.let { put(EventParams.CONFIG_FILE_STATUS_CODE, it) }
-            configFileLatency?.let { put(EventParams.CONFIG_FILE_LATENCY, it) }
+            put(EventParams.CONFIG_FILE_NAME, configFileName.toString())
+            put(EventParams.CONFIG_FILE_STATUS_CODE, configFileStatusCode.toString())
+            put(EventParams.CONFIG_FILE_LATENCY, configFileLatency.toString())
         }
 
         companion object {
