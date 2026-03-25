@@ -63,6 +63,8 @@ internal object EventValues {
     const val FILES = "file"
     const val FIELDS = "textField"
     const val PDF = "pdf"
+    const val CARD_CREATE = "cardCreate"
+    const val CARD_UPDATE = "cardUpdate"
     const val CREATE_FORM_TYPE_SESSION = "session"
     const val CREATE_FORM_TYPE_CREATE = "create"
 }
