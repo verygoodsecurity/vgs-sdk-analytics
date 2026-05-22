@@ -4,7 +4,6 @@ import com.verygoodsecurity.sdk.analytics.EventParams
 import com.verygoodsecurity.sdk.analytics.EventTypes
 import com.verygoodsecurity.sdk.analytics.EventValues
 import com.verygoodsecurity.sdk.analytics.utils.currentTimeMillis
-import kotlin.jvm.JvmName
 
 sealed class VGSAnalyticsEvent {
 
@@ -14,19 +13,50 @@ sealed class VGSAnalyticsEvent {
 
     private val timestamp: Long = currentTimeMillis()
 
-    @JvmName("getEventParams")
-    fun getParams(): Map<String, Any> {
+    fun getEventParams(): Map<String, Any> {
         return params.also {
             it[EventParams.TYPE] = type
             it[EventParams.TIMESTAMP] = timestamp
         }
     }
 
-    data object Create: VGSAnalyticsEvent() {
+    class Init private constructor(
+        val createFromType: String,
+        val configFileName: String?,
+        val configFileStatusCode: Int?,
+        val configFileLatency: Long?,
+    ) : VGSAnalyticsEvent() {
 
-        override val type: String = EventTypes.CREATE
+        override val type: String = EventTypes.INIT
 
-        override val params: MutableMap<String, Any> = mutableMapOf()
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
+            EventParams.FORM_CREATE_TYPE to createFromType
+        ).apply {
+            put(EventParams.CONFIG_FILE_NAME, configFileName.toString())
+            put(EventParams.CONFIG_FILE_STATUS_CODE, configFileStatusCode.toString())
+            put(EventParams.CONFIG_FILE_LATENCY, configFileLatency.toString())
+        }
+
+        companion object {
+
+            fun create() = Init(
+                createFromType = EventValues.CREATE_FORM_TYPE_CREATE,
+                configFileName = null,
+                configFileStatusCode = null,
+                configFileLatency = null
+            )
+
+            fun session(
+                configFileName: String?,
+                configFileStatusCode: Int?,
+                configFileLatency: Long?
+            ) = Init(
+                createFromType = EventValues.CREATE_FORM_TYPE_SESSION,
+                configFileName = configFileName,
+                configFileStatusCode = configFileStatusCode,
+                configFileLatency = configFileLatency
+            )
+        }
     }
 
     data class FieldAttach(
@@ -128,6 +158,14 @@ sealed class VGSAnalyticsEvent {
 
             fun pdf() = this.also {
                 content.add(EventValues.PDF)
+            }
+
+            fun cardCreate() = this.also {
+                content.add(EventValues.CARD_CREATE)
+            }
+
+            fun cardUpdate() = this.also {
+                content.add(EventValues.CARD_UPDATE)
             }
 
             fun build() = Request(
@@ -269,5 +307,23 @@ sealed class VGSAnalyticsEvent {
         override val params: MutableMap<String, Any> = mutableMapOf(
             EventParams.CONTENT_PATH to contentPath
         )
+    }
+
+    data class CardLookup(
+        val status: VGSAnalyticsStatus,
+        val code: Int,
+        val latency: Long,
+        val error: String? = null
+    ) : VGSAnalyticsEvent() {
+
+        override val type: String = EventTypes.CARD_LOOKUP
+
+        override val params: MutableMap<String, Any> = mutableMapOf<String, Any>(
+            EventParams.STATUS to status.getAnalyticsName(),
+            EventParams.CODE to code,
+            EventParams.LATENCY to latency
+        ).apply {
+            error?.let { put(EventParams.ERROR, it) }
+        }
     }
 }

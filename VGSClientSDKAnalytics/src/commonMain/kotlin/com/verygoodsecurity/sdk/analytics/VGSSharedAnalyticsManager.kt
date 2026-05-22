@@ -33,7 +33,9 @@ class VGSSharedAnalyticsManager internal constructor(
     private val repository: AnalyticsRepository = provider.getAnalyticsRepository()
 
     private val defaultEventParams: Map<String, Any> = provider.getDefaultEventParams(
-        source = source, sourceVersion = sourceVersion, dependencyManager = dependencyManager
+        source = source,
+        sourceVersion = sourceVersion,
+        dependencyManager = dependencyManager
     )
 
     constructor(
@@ -55,7 +57,7 @@ class VGSSharedAnalyticsManager internal constructor(
 
     fun capture(vault: String, environment: String, formId: String, event: VGSAnalyticsEvent) {
         if (!isEnabled) return
-        val params = (this@VGSSharedAnalyticsManager.defaultEventParams + event.getParams()).toMutableMap()
+        val params = (this@VGSSharedAnalyticsManager.defaultEventParams + event.getEventParams()).toMutableMap()
         params[EventParams.VAULT_ID] = vault
         params[EventParams.ENVIRONMENT] = environment
         params[EventParams.FORM_ID] = formId
